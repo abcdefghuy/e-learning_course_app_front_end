@@ -25,7 +25,6 @@ public class AccountFragment extends Fragment {
         calendar = Calendar.getInstance();
         binding.etDob.setFocusable(false);
         binding.etDob.setOnClickListener(view -> showDatePickerDialog());
-
         return binding.getRoot();
     }
 

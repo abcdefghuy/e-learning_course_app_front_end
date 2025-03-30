@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.0"
+agp = "8.3.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -10,7 +10,7 @@ constraintlayout = "2.2.1"
 retrofit = "2.11.0"
 okhttp = "4.12.0"
 gson = "2.12.1"
-
+glide = "4.16.0"
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -23,6 +23,7 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 convertor = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit"}
+glide = { module = "com.github.bumptech.glide:glide", name="glide", version.ref = "glide" }
 
 
 [plugins]

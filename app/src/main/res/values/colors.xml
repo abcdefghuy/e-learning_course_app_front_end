@@ -11,4 +11,13 @@
     <color name="lavender">#8692f7</color>
     <color name="grey">#B0B0B0</color>
     <color name="background">#F5F9FF</color>
+    <color name="blue_500">#1E88E5</color>
+    <color name="blue_700">#0D47A1</color>
+    <color name="red">#FF0000</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="gray_600">#757575</color>
+    <color name="blue1">#2196F3</color>
+    <color name="grey_100">#757575</color>
+    <color name="darker_gray">#A9A9A9</color>
 </resources>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">E-Learning Course</string>
+    <string name="bookmark_removed">Removed from bookmarks</string>
+    <string name="bookmark_added">Added to bookmarks</string>
 </resources>
