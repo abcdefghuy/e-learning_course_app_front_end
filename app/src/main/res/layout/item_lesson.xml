@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Section Header (if needed) -->
+    <TextView
+        android:id="@+id/tvSectionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="#212121"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="Section 1 - Introduction"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tvSectionDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:textColor="#757575"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:text="15 Min"
+        tools:visibility="visible" />
+
+    <!-- Lesson Item -->
+    <LinearLayout
+        android:id="@+id/lessonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingVertical="12dp">
+
+        <TextView
+            android:id="@+id/tvLessonNumber"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@drawable/circle_lesson_number"
+            android:gravity="center"
+            android:textColor="#757575"
+            android:textSize="12sp"
+            tools:text="01" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvLessonTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#212121"
+                android:textSize="14sp"
+                tools:text="Introduction to Design Thinking" />
+
+            <TextView
+                android:id="@+id/tvLessonDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#757575"
+                android:textSize="12sp"
+                tools:text="10:00" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivLessonStatus"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_play_circle"
+            app:tint="#2196F3" />
+
+    </LinearLayout>
+
+</LinearLayout> 

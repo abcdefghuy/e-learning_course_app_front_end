@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remove from Favorites?"
+        android:textColor="#1B1B1B"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-medium"
+        android:alpha="0.95"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Course Preview -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/coursePreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#E0E0E0"
+        android:foreground="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@id/tvDialogTitle">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Course Thumbnail -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivThumbnail"
+                android:layout_width="90dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/RoundedCorners12dp"
+                tools:src="@tools:sample/backgrounds/scenic" />
+
+            <!-- Course Title -->
+            <TextView
+                android:id="@+id/tvCourseTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:textColor="#1B1B1B"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:alpha="0.95"
+                app:layout_constraintStart_toEndOf="@id/ivThumbnail"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Introduction of Figma" />
+
+            <!-- Instructor Name -->
+            <TextView
+                android:id="@+id/tvInstructor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:alpha="0.8"
+                app:layout_constraintStart_toStartOf="@id/tvCourseTitle"
+                app:layout_constraintTop_toBottomOf="@id/tvCourseTitle"
+                tools:text="Jacob Jones" />
+
+            <!-- Price -->
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:textColor="#2196F3"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                app:layout_constraintStart_toStartOf="@id/tvInstructor"
+                app:layout_constraintTop_toBottomOf="@id/tvInstructor"
+                tools:text="$180.00" />
+
+            <!-- Best Seller Badge -->
+            <TextView
+                android:id="@+id/tvBestSeller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Best seller"
+                android:textColor="#FFA000"
+                android:textSize="13sp"
+                android:fontFamily="sans-serif-medium"
+                android:alpha="0.9"
+                app:layout_constraintStart_toEndOf="@id/tvPrice"
+                app:layout_constraintBottom_toBottomOf="@id/tvPrice" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="32dp"
+        android:gravity="end"
+        app:layout_constraintTop_toBottomOf="@id/coursePreview"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Cancel Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="Cancel"
+            android:textColor="#757575"
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif-medium"
+            android:paddingHorizontal="20dp"
+            android:minHeight="48dp"
+            app:rippleColor="#1F757575"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+        <!-- Remove Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yes, Remove"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textAllCaps="false"
+            android:fontFamily="sans-serif-medium"
+            android:paddingHorizontal="24dp"
+            android:minHeight="48dp"
+            app:backgroundTint="#2196F3"
+            app:cornerRadius="24dp"
+            app:rippleColor="#52FFFFFF"
+            style="@style/Widget.MaterialComponents.Button" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout> 
