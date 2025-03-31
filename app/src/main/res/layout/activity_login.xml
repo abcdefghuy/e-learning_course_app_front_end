@@ -101,15 +101,8 @@
                     android:layout_marginStart="5dp"/>
             </LinearLayout>
         </LinearLayout>
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="@{viewModel.isLoading}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
+        <include
+            layout="@layout/progress_bar"
+            app:isLoading="@{viewModel.isLoading}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

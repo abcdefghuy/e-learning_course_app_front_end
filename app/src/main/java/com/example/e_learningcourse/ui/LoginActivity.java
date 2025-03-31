@@ -30,8 +30,8 @@ public class LoginActivity extends AppCompatActivity {
 
             viewModel.getLoginResponse().observe(this, response -> {
                 if (response != null && response.getToken() != null) {
-                    Log.d("LoginActivity", "Token received: " + response.getToken());
                     startActivity(new Intent(this, MainActivity.class));
+                    Toast.makeText(this, "Login successfully!", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
                     Toast.makeText(this, "Login failed!", Toast.LENGTH_SHORT).show();
