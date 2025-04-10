@@ -2,21 +2,21 @@ package com.example.e_learningcourse.ui;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.e_learningcourse.model.response.LoginResponse;
+import com.example.e_learningcourse.model.response.RegisterResponse;
 import com.example.e_learningcourse.repository.AuthenticationRepository;
 
-public class LoginViewModel extends ViewModel {
+public class RegisterViewModel {
     private final AuthenticationRepository repository;
     public MutableLiveData<String> email = new MutableLiveData<>("");
     public MutableLiveData<String> password = new MutableLiveData<>("");
 
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private MutableLiveData<String> errorMessage = new MutableLiveData<>();
-    private MutableLiveData<LoginResponse> loginResponse = new MutableLiveData<>();
+    private MutableLiveData<RegisterResponse> registerResponse = new MutableLiveData<>();
 
-    public LoginViewModel() {
+    public RegisterViewModel() {
         repository = new AuthenticationRepository();
     }
 
@@ -28,8 +28,8 @@ public class LoginViewModel extends ViewModel {
         return errorMessage;
     }
 
-    public LiveData<LoginResponse> getLoginResponse() {
-        return loginResponse;
+    public LiveData<RegisterResponse> getLoginResponse() {
+        return registerResponse;
     }
 
     public void login() {
