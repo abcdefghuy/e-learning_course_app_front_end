@@ -1,4 +1,4 @@
-package com.example.e_learningcourse.ui;
+package com.example.e_learningcourse.ui.course;
 
 import android.os.Bundle;
 
@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ActivityCourseDetailsBinding;
+import com.example.e_learningcourse.ui.AboutFragment;
+import com.example.e_learningcourse.ui.LessonsFragment;
+import com.example.e_learningcourse.ui.ReviewsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class CourseDetailsActivity extends AppCompatActivity {

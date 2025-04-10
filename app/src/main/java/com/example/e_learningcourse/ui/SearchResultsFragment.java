@@ -14,6 +14,7 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
 import com.example.e_learningcourse.databinding.FragmentSearchResultsBinding;
 import com.example.e_learningcourse.model.Course;
+import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class SearchResultsFragment extends Fragment {
 
     private void setupViews() {
         // Initialize adapter
-        resultsAdapter = new PopularCoursesAdapter();
+        resultsAdapter = new PopularCoursesAdapter(requireContext());
         binding.rvResults.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvResults.setAdapter(resultsAdapter);
 
@@ -59,7 +60,7 @@ public class SearchResultsFragment extends Fragment {
 
     public void updateSearch(String query) {
         if (binding == null) return;
-        
+
         currentQuery = query;
         binding.tvResultsTitle.setText(String.format("Results for \"%s\"", query));
         performSearch(query);
@@ -70,18 +71,18 @@ public class SearchResultsFragment extends Fragment {
 
         // Get selected tab position
         int selectedTab = binding.tabLayout.getSelectedTabPosition();
-        
+
         if (selectedTab == 0) { // Courses tab
-            List<Course> searchResults = new ArrayList<>();
-            
+            List<CourseDetailResponse> searchResults = new ArrayList<>();
+
             // Add sample courses that match the search query
             if (query.toLowerCase().contains("design") || query.toLowerCase().contains("figma")) {
-                searchResults.add(new Course("Introduction to Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
-                searchResults.add(new Course("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
-                searchResults.add(new Course("Advanced Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
-                searchResults.add(new Course("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
+                searchResults.add(new CourseDetailResponse("Introduction to Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
+                searchResults.add(new CourseDetailResponse("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
+                searchResults.add(new CourseDetailResponse("Advanced Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
+                searchResults.add(new CourseDetailResponse("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
             }
-            
+
             resultsAdapter.setCourses(searchResults);
             binding.tvResultsCount.setText(searchResults.size() + " Results Found");
         } else { // Mentors tab

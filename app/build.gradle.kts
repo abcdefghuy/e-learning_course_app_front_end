@@ -51,4 +51,5 @@ dependencies {
     implementation(libs.convertor)
     implementation (libs.glide)
     annotationProcessor (libs.glide)
+    implementation(libs.shimmer)
 }
