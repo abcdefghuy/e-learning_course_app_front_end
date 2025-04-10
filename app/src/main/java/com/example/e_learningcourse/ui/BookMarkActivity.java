@@ -1,5 +1,7 @@
 package com.example.e_learningcourse.ui;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,18 +16,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.e_learningcourse.R;
+import com.example.e_learningcourse.adapter.CourseAdapter;
 import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
 import com.example.e_learningcourse.model.Course;
+import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookMarkActivity extends AppCompatActivity implements PopularCoursesAdapter.OnBookmarkClickListener {
-    private PopularCoursesAdapter adapter;
-    private List<Course> bookmarkedCourses;
+public class BookMarkActivity extends AppCompatActivity implements CourseAdapter.OnBookmarkClickListener {
+    private CourseAdapter adapter;
+    private List<CourseDetailResponse> bookmarkedCourses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,30 +45,31 @@ public class BookMarkActivity extends AppCompatActivity implements PopularCourse
         // Initialize bookmarked courses
         initializeBookmarkedCourses();
         // Set up adapter
-        adapter = new PopularCoursesAdapter(bookmarkedCourses);
+        adapter = new CourseAdapter(this);
+        adapter.setCourses(bookmarkedCourses);
         adapter.setOnBookmarkClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
     private void initializeBookmarkedCourses() {
         bookmarkedCourses = new ArrayList<>();
-        bookmarkedCourses.add(new Course("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new Course("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new Course("Introduction of Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new Course("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new Course("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
+        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
+        bookmarkedCourses.add(new CourseDetailResponse("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
+        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
+        bookmarkedCourses.add(new CourseDetailResponse("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
+        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
     }
 
     @Override
-    public void onBookmarkClick(Course course, int position) {
+    public void onBookmarkClick(CourseDetailResponse course, int position) {
         showRemoveDialog(course, position);
     }
 
-    private void showRemoveDialog(Course course, int position) {
+    private void showRemoveDialog(CourseDetailResponse course, int position) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_remove_bookmark);
-        
+
         // Make dialog background transparent to show rounded corners
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -76,10 +82,16 @@ public class BookMarkActivity extends AppCompatActivity implements PopularCourse
         ShapeableImageView ivThumbnail = dialog.findViewById(R.id.ivThumbnail);
         TextView tvBestSeller = dialog.findViewById(R.id.tvBestSeller);
 
-        if (tvCourseTitle != null) tvCourseTitle.setText(course.getTitle());
-        if (tvInstructor != null) tvInstructor.setText(course.getInstructor());
-        if (tvPrice != null) tvPrice.setText(String.format("$%.2f", course.getPrice()));
-        if (ivThumbnail != null) ivThumbnail.setImageResource(course.getThumbnailResId());
+        if (tvCourseTitle != null) tvCourseTitle.setText(course.getCourseName());
+        if (tvInstructor != null) tvInstructor.setText("Huy");
+        if (tvPrice != null) tvPrice.setText(String.format("$%.2f", course.getCoursePrice()));
+        if (ivThumbnail != null) {
+            Glide.with(this)
+                    .load(course.getCourseImg()) // URL ảnh
+//                    .placeholder(R.drawable.placeholder_img) // ảnh mặc định khi đang load
+//                    .error(R.drawable.error_img) // ảnh hiển thị nếu load lỗi
+                    .into(ivThumbnail);
+        }
         if (tvBestSeller != null) {
             tvBestSeller.setVisibility(course.isBestSeller() ? View.VISIBLE : View.GONE);
         }
@@ -99,10 +111,10 @@ public class BookMarkActivity extends AppCompatActivity implements PopularCourse
                 bookmarkedCourses.remove(position);
                 adapter.notifyItemRemoved(position);
                 adapter.notifyItemRangeChanged(position, bookmarkedCourses.size());
-                
+
                 // Show feedback
                 Toast.makeText(BookMarkActivity.this, R.string.bookmark_removed, Toast.LENGTH_SHORT).show();
-                
+
                 // Dismiss dialog
                 dialog.dismiss();
 
@@ -120,7 +132,7 @@ public class BookMarkActivity extends AppCompatActivity implements PopularCourse
 //        if (emptyState != null) {
 //            emptyState.setVisibility(bookmarkedCourses.isEmpty() ? View.VISIBLE : View.GONE);
 //        }
-        
+
         // Find the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.rvBookmarkedCourses);
         if (recyclerView != null) {

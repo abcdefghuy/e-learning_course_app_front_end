@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,124 +12,143 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.e_learningcourse.R;
+import com.example.e_learningcourse.databinding.ItemCourseBinding;
+import com.example.e_learningcourse.databinding.ItemCourseShimmerBinding;
+import com.example.e_learningcourse.databinding.ItemPopularCourseBinding;
 import com.example.e_learningcourse.model.Course;
-import com.example.e_learningcourse.ui.CourseDetailsActivity;
+import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.ui.course.CourseDetailsActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class PopularCoursesAdapter extends RecyclerView.Adapter<PopularCoursesAdapter.CourseViewHolder> {
-    private List<Course> courses;
-    private OnBookmarkClickListener bookmarkClickListener;
+public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_SHIMMER = 1;
 
-    public interface OnBookmarkClickListener {
-        void onBookmarkClick(Course course, int position);
-    }
-    public PopularCoursesAdapter() {
-        this.courses = new ArrayList<>();
-    }
+    private List<CourseDetailResponse> courses = new ArrayList<>();
+    private OnCourseClickListener listener;
+    private View headerBookmarkView;
+    private Context context;
+    private boolean showShimmer = false;
 
-    public PopularCoursesAdapter(List<Course> courses) {
-        this.courses = courses != null ? courses : new ArrayList<>();
-    }
-
-    public void setOnBookmarkClickListener(OnBookmarkClickListener listener) {
-        this.bookmarkClickListener = listener;
+    public PopularCoursesAdapter(Context context) {
+        this.context = context;
     }
 
-    public void setCourses(List<Course> courses) {
+    public interface OnCourseClickListener {
+        void onBookmarkClick(CourseDetailResponse course, int position);
+    }
+
+    public void setOnCourseClickListener(OnCourseClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void setHeaderBookmarkView(View view) {
+        this.headerBookmarkView = view;
+    }
+
+    public void setCourses(List<CourseDetailResponse> courses) {
         this.courses = courses != null ? courses : new ArrayList<>();
         notifyDataSetChanged();
     }
 
-    @NonNull
-    @Override
-    public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_popular_course, parent, false);
-        return new CourseViewHolder(view);
+    public void showShimmer(boolean show) {
+        this.showShimmer = show;
+        notifyDataSetChanged();
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-        Course course = courses.get(position);
-        holder.bind(course, position);
+    public int getItemViewType(int position) {
+        return showShimmer ? VIEW_TYPE_SHIMMER : VIEW_TYPE_ITEM;
+    }
+
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_SHIMMER) {
+            ItemCourseShimmerBinding binding = ItemCourseShimmerBinding.inflate(
+                    LayoutInflater.from(parent.getContext()), parent, false);
+            return new ShimmerViewHolder(binding);
+        } else {
+            ItemPopularCourseBinding binding = ItemPopularCourseBinding.inflate(
+                    LayoutInflater.from(parent.getContext()), parent, false);
+            return new CourseViewHolder(binding);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof CourseViewHolder) {
+            CourseDetailResponse course = courses.get(position);
+            ((CourseViewHolder) holder).bind(course, position);
+        } else if (holder instanceof ShimmerViewHolder) {
+            ((ShimmerViewHolder) holder).bind();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return courses.size();
-    }
-
-    public void updateCourse(int position) {
-        if (position >= 0 && position < courses.size()) {
-            notifyItemChanged(position);
-        }
+        return showShimmer ? 5 : courses.size();
     }
 
     class CourseViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView ivThumbnail;
-        private final TextView tvTitle;
-        private final TextView tvInstructor;
-        private final TextView tvPrice;
-        private final TextView tvBestSeller;
-        private final ImageButton btnBookmark;
+        private final ItemPopularCourseBinding binding;
 
-        private final ShapeableImageView ivInstructorAvatar;
-
-        public CourseViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ivThumbnail = itemView.findViewById(R.id.ivThumbnail);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvInstructor = itemView.findViewById(R.id.tvInstructor);
-            tvPrice = itemView.findViewById(R.id.tvPrice);
-            tvBestSeller = itemView.findViewById(R.id.tvBestSeller);
-            btnBookmark = itemView.findViewById(R.id.btnBookmark);
-            ivInstructorAvatar = itemView.findViewById(R.id.ivInstructorAvatar);
+        public CourseViewHolder(ItemPopularCourseBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
-        public void bind(final Course course, final int position) {
-            if (ivThumbnail != null) {
-                ivThumbnail.setImageResource(course.getThumbnailResId());
-            }
-            if (tvTitle != null) {
-                tvTitle.setText(course.getTitle());
-            }
-            if (tvInstructor != null) {
-                tvInstructor.setText(course.getInstructor());
-            }
-            if (tvPrice != null) {
-                tvPrice.setText(String.format(Locale.US, "$%.2f", course.getPrice()));
-            }
-            if (tvBestSeller != null) {
-                tvBestSeller.setVisibility(course.isBestSeller() ? View.VISIBLE : View.GONE);
-            }
+        public void bind(CourseDetailResponse course, int position) {
+            binding.tvCourseTitle.setText(course.getCourseName());
+            binding.tvInstructorName.setText("Huy");
+            binding.tvRating.setText(String.format(Locale.getDefault(), "%.1f", course.getRating()));
+            binding.tvPrice.setText(String.format(Locale.US, "$%.2f", course.getCoursePrice()));
+            binding.ivBookmark.setSelected(course.isBookmarked());
 
-            if(ivInstructorAvatar != null) {
-                ivInstructorAvatar.setImageResource(R.drawable.avatar);
-            }
-            if (btnBookmark != null) {
-                btnBookmark.setImageResource(course.isBookmarked() ? 
-                    R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark);
-                btnBookmark.setOnClickListener(v -> {
-                    if (bookmarkClickListener != null) {
-                        bookmarkClickListener.onBookmarkClick(course, position);
-                    }
-                });
-            }
+            Glide.with(context)
+                    .load(course.getCourseImg())
+                    //.placeholder(R.drawable.placeholder_img)
+                    .into(binding.ivCourseThumbnail);
+
+            Glide.with(context)
+                    .load(R.drawable.avatar)
+                    .placeholder(R.drawable.avatar)
+                    .into(binding.ivInstructorAvatar);
+
+            binding.ivBookmark.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onBookmarkClick(course, position);
+                }
+            });
+
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), CourseDetailsActivity.class);
-//                intent.putExtra("course_id", course.getId());
-//                intent.putExtra("course_title", course.getTitle());
-//                intent.putExtra("course_instructor", course.getInstructor());
-//                intent.putExtra("course_thumbnail", course.getThumbnailResId());
-//                intent.putExtra("course_rating", course.getRating());
-//                intent.putExtra("course_price", course.getPrice());
+                intent.putExtra("course_id", course.getCourseId());
                 v.getContext().startActivity(intent);
             });
+        }
+    }
+
+    class ShimmerViewHolder extends RecyclerView.ViewHolder {
+        private final ItemCourseShimmerBinding binding;
+
+        public ShimmerViewHolder(ItemCourseShimmerBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
+        }
+
+        public void bind() {
+            binding.shimmerThumbnail.startShimmer();
+            binding.shimmerTitle.startShimmer();
+            binding.shimmerAvatar.startShimmer();
+            binding.shimmerInstructor.startShimmer();
+            binding.shimmerPrice.startShimmer();
         }
     }
 }
