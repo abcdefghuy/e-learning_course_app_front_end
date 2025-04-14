@@ -20,4 +20,5 @@
     <color name="blue1">#2196F3</color>
     <color name="grey_100">#757575</color>
     <color name="darker_gray">#A9A9A9</color>
+    <color name="gray_light">#E0E0E0</color>
 </resources>

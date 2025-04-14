@@ -58,9 +58,9 @@
 <!--            android:exported="false"-->
 <!--            android:screenOrientation="portrait"-->
 <!--            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />-->
-        <activity android:name=".ui.CourseDetailsActivity"/>
-        <activity android:name=".ui.CategoryActivity"/>
-        <activity android:name=".ui.PopularCoursesActivity"/>
+        <activity android:name=".ui.course.CourseDetailsActivity"/>
+        <activity android:name=".ui.category.CategoryActivity"/>
+        <activity android:name=".ui.course.PopularCoursesActivity"/>
         <activity android:name=".ui.ContinueLearningActivity"/>
         <activity android:name=".ui.BookMarkActivity"/>
         <activity android:name=".ui.CoursesActivity"/>

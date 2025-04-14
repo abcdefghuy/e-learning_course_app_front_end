@@ -53,4 +53,5 @@ dependencies {
     annotationProcessor (libs.glide)
     implementation(libs.security.crypto)
     implementation(libs.logging.interceptor)
+    implementation(libs.shimmer)
 }

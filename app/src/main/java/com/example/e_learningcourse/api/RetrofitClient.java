@@ -1,6 +1,7 @@
 package com.example.e_learningcourse.api;
 
-import static com.example.e_learningcourse.consants.Constants.BASE_URL;
+import static com.example.e_learningcourse.constants.Constants.BASE_URL;
+import static com.example.e_learningcourse.constants.Constants.TEST_URL;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -26,7 +27,7 @@ public class RetrofitClient {
     public static <S> S createService(Class<S> serviceClass) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(TEST_URL)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();

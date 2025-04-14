@@ -7,25 +7,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.e_learningcourse.databinding.ItemCategoryBinding;
-import com.example.e_learningcourse.model.Category;
+import com.example.e_learningcourse.model.response.CategoryResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
 
-    private List<Category> categories = new ArrayList<>();
+    private List<CategoryResponse> categories = new ArrayList<>();
     private OnCategoryClickListener listener;
 
     public interface OnCategoryClickListener {
-        void onCategoryClick(Category category);
+        void onCategoryClick(CategoryResponse category);
     }
 
     public void setOnCategoryClickListener(OnCategoryClickListener listener) {
         this.listener = listener;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<CategoryResponse> categories) {
         this.categories = categories;
         notifyDataSetChanged();
     }
@@ -66,9 +66,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             });
         }
 
-        void bind(Category category) {
-            binding.tvCategoryName.setText(category.getName());
-            binding.ivCategoryIcon.setImageResource(category.getIconResId());
+        void bind(CategoryResponse category) {
+            binding.tvCategoryName.setText(category.getCategoryName());
+           // binding.ivCategoryIcon.setImageResource(category.getIconResId());
         }
     }
 } 
