@@ -1,9 +1,12 @@
 package com.example.e_learningcourse.api;
 
+import com.example.e_learningcourse.model.request.ForgotPasswordRequest;
 import com.example.e_learningcourse.model.request.LoginRequest;
 import com.example.e_learningcourse.model.request.RegisterRequest;
+import com.example.e_learningcourse.model.request.ResetPasswordRequest;
+import com.example.e_learningcourse.model.request.VerifyRequest;
+import com.example.e_learningcourse.model.response.ApiResponse;
 import com.example.e_learningcourse.model.response.LoginResponse;
-import com.example.e_learningcourse.model.response.RegisterResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -12,8 +15,17 @@ import retrofit2.http.POST;
 
 public interface AuthenticationAPI {
     @POST("auth/login")
-    Call<LoginResponse> login(@Body LoginRequest request);
+    Call<ApiResponse<LoginResponse>> login(@Body LoginRequest request);
 
     @POST("auth/signup")
-    Call<RegisterResponse> register(@Body RegisterRequest request);
+    Call<ApiResponse<Void>> register(@Body RegisterRequest request);
+
+    @POST("auth/verify")
+    Call<ApiResponse<Void>> verify(@Body VerifyRequest request);
+
+    @POST("auth/forgot-password")
+    Call<ApiResponse<Void>> forgetPassword(@Body ForgotPasswordRequest request);
+
+    @POST("auth/reset-password")
+    Call<ApiResponse<Void>> resetPassword(@Body ResetPasswordRequest request);
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.e_learningcourse.databinding.ActivityIntroBinding;
+import com.example.e_learningcourse.ui.auth.login.LoginActivity;
 
 public class IntroActivity extends AppCompatActivity {
     private ActivityIntroBinding binding;

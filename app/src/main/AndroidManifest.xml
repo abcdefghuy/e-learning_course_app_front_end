@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
+        android:name=".App"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,7 +17,7 @@
         android:theme="@style/Theme.ELearningCourse"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,10 +26,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.IntroActivity"/>
-        <activity android:name=".ui.LoginActivity"/>
-        <activity android:name=".ui.RegisterActivity"/>
-        <activity android:name=".ui.VerifyOtpActivity" />
-<!--        <activity android:name=".MainActivity"/>-->
+        <activity android:name=".ui.auth.login.LoginActivity"/>
+        <activity android:name=".ui.auth.register.RegisterActivity"/>
+        <activity android:name=".ui.auth.verifyOtp.VerifyOtpActivity" />
+        <activity android:name=".ui.auth.forgotPassword.ForgotPasswordActivity"/>
+        <activity android:name=".ui.auth.resetPassword.ResetPasswordActivity"/>
+        <activity android:name=".MainActivity"/>
 <!--            android:name=".ui.PaymentMethodActivity"-->
 <!--            android:exported="false"-->
 <!--            android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />-->
@@ -61,7 +64,7 @@
         <activity android:name=".ui.ContinueLearningActivity"/>
         <activity android:name=".ui.BookMarkActivity"/>
         <activity android:name=".ui.CoursesActivity"/>
-        <activity android:name=".ui.SearchActivity" />
+        <activity android:name=".ui.search.SearchActivity" />
     </application>
 
 </manifest>

@@ -51,4 +51,6 @@ dependencies {
     implementation(libs.convertor)
     implementation (libs.glide)
     annotationProcessor (libs.glide)
+    implementation(libs.security.crypto)
+    implementation(libs.logging.interceptor)
 }

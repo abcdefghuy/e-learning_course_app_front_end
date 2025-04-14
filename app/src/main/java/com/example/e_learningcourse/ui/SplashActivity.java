@@ -7,6 +7,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.e_learningcourse.MainActivity;
+import com.example.e_learningcourse.data.local.TokenManager;
+import com.example.e_learningcourse.ui.auth.login.LoginActivity;
+
 public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -14,10 +18,15 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         boolean hasSeenIntro = prefs.getBoolean("hasSeenIntro", false);
 
-        if (hasSeenIntro) {
-            startActivity(new Intent(this, LoginActivity.class));
-        } else {
+        if (!hasSeenIntro) {
             startActivity(new Intent(this, IntroActivity.class));
+        } else {
+            String token = TokenManager.getInstance(getApplicationContext()).getToken();
+            if (token != null && !token.isEmpty()) {
+                startActivity(new Intent(this, MainActivity.class));
+            } else {
+                startActivity(new Intent(this, LoginActivity.class));
+            }
         }
         finish();
     }
