@@ -7,12 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.e_learningcourse.databinding.ActivityMainBinding;
-import com.example.e_learningcourse.ui.AccountFragment;
-import com.example.e_learningcourse.ui.CoursesActivity;
 import com.example.e_learningcourse.ui.HomeFragment;
 import com.example.e_learningcourse.ui.MessageFragment;
 import com.example.e_learningcourse.ui.MyCourseFragment;
-import com.example.e_learningcourse.ui.SearchActivity;
+import com.example.e_learningcourse.ui.search.SearchActivity;
 import com.example.e_learningcourse.ui.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {

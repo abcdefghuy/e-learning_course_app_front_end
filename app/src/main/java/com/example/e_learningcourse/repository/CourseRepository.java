@@ -18,7 +18,7 @@ public class CourseRepository {
     private CourseAPI api;
 
     public CourseRepository() {
-        api = RetrofitClient.getInstance().create(CourseAPI.class);
+        api = RetrofitClient.createService(CourseAPI.class);
     }
 
     public LiveData<PaginateCourseResponse> getTopSellingCourses() {

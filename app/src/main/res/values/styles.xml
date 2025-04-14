@@ -53,4 +53,30 @@
             <item name="textAllCaps">false</item>
             <item name="android:fontFamily">sans-serif-medium</item>
         </style>
+
+    <style name="KeyStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:backgroundTint">@color/lavender</item>
+    </style>
+
+    <style name="CustomTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@android:color/white</item>
+        <item name="boxBackgroundColor">@android:color/white</item>
+        <item name="hintTextColor">@color/grey</item>
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="hintTextAppearance">@style/HintStyle</item>
+        <item name="errorTextColor">@color/red</item>
+        <item name="boxStrokeErrorColor">@color/white</item>
+        <item name="errorIconDrawable">@null</item>
+    </style>
+    <style name="HintStyle" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
 </resources> 

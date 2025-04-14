@@ -18,7 +18,7 @@ import retrofit2.Response;
 public class CategoryRepository {
     private CategoryApi api;
     public CategoryRepository() {
-        api = RetrofitClient.getInstance().create(CategoryApi.class);
+        api = RetrofitClient.createService(CategoryApi.class);
     }
     // Add methods to fetch categories from the API
     public LiveData<List<CategoryResponse>> getAllCategories() {

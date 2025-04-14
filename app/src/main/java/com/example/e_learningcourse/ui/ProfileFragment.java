@@ -11,13 +11,11 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.e_learningcourse.R;
-import com.example.e_learningcourse.databinding.FragmentAccountBinding;
 import com.example.e_learningcourse.databinding.FragmentProfileBinding;
+import com.example.e_learningcourse.ui.auth.login.LoginActivity;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;

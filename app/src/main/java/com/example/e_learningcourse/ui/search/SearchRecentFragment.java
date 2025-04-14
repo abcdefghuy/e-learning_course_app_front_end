@@ -1,4 +1,4 @@
-package com.example.e_learningcourse.ui;
+package com.example.e_learningcourse.ui.search;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
