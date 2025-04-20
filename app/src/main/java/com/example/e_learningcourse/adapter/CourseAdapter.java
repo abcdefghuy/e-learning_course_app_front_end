@@ -14,6 +14,7 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ItemCourseBinding;
 import com.example.e_learningcourse.databinding.ItemCourseShimmerBinding;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.course.CourseDetailsActivity;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_SHIMMER = 1;
 
-    private List<CourseDetailResponse> courses;
+    private List<CourseResponse> courses;
     private OnBookmarkClickListener bookmarkClickListener;
     private Context context;
     private boolean showShimmer = false;
@@ -35,24 +36,20 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public interface OnBookmarkClickListener {
-        void onBookmarkClick(CourseDetailResponse course, int position);
-    }
-
-    public CourseAdapter(List<CourseDetailResponse> courses) {
-        this.courses = courses != null ? courses : new ArrayList<>();
+        void onBookmarkClick(CourseResponse course, int position);
     }
 
     public void setOnBookmarkClickListener(OnBookmarkClickListener listener) {
         this.bookmarkClickListener = listener;
     }
 
-    public void addCourses(List<CourseDetailResponse> newCourses) {
+    public void addCourses(List<CourseResponse> newCourses) {
         int oldSize = courses.size();
         courses.addAll(newCourses);
         notifyItemRangeInserted(oldSize, newCourses.size());
     }
 
-    public void setCourses(List<CourseDetailResponse> courses) {
+    public void setCourses(List<CourseResponse> courses) {
         this.courses = courses != null ? courses : new ArrayList<>();
         notifyDataSetChanged();
     }
@@ -84,7 +81,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CourseViewHolder) {
-            CourseDetailResponse course = courses.get(position);
+            CourseResponse course = courses.get(position);
             ((CourseViewHolder) holder).bind(course, position);
         } else if (holder instanceof ShimmerViewHolder) {
             ((ShimmerViewHolder) holder).bind();
@@ -110,7 +107,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.binding = binding;
         }
 
-        public void bind(CourseDetailResponse course, int position) {
+        public void bind(CourseResponse course, int position) {
             binding.tvTitle.setText(course.getCourseName());
             binding.tvInstructor.setText("huy");
             binding.tvPrice.setText(String.format(Locale.getDefault(), "$%.2f", course.getCoursePrice()));

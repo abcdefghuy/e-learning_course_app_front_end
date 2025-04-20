@@ -8,8 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.FragmentAboutBinding;
+import com.example.e_learningcourse.ui.course.SharedCourseViewModel;
+import com.example.e_learningcourse.ui.review.ReviewViewModel;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class AboutFragment extends Fragment {
     private FragmentAboutBinding binding;
@@ -17,6 +25,8 @@ public class AboutFragment extends Fragment {
     public static AboutFragment newInstance() {
         return new AboutFragment();
     }
+    private Long courseId;
+    private SharedCourseViewModel sharedViewModel;
 
     @Nullable
     @Override
@@ -30,19 +40,36 @@ public class AboutFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupContent();
+        courseId = getArguments() != null ? getArguments().getLong("courseId") : -1;
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedCourseViewModel.class);
+        setupContent(courseId);
     }
 
-    private void setupContent() {
-        // Get course data from arguments or activity
-        String description = "Design Thinking is a human-centered approach to innovation that draws from the designer's toolkit to integrate the needs of people, the possibilities of technology, and the requirements for business success.";
-        
-        binding.tvAboutCourse.setText(description);
-        binding.tvAboutCourse.setMaxLines(3); // Initially show 3 lines
-        
-        binding.tvReadMore.setOnClickListener(v -> {
-            binding.tvAboutCourse.setMaxLines(Integer.MAX_VALUE);
-            v.setVisibility(View.GONE);
+    private void setupContent(Long courseId) {
+        sharedViewModel.getCourseDetail().observe(getViewLifecycleOwner(), detail -> {
+            if (detail != null) {
+                binding.tvAboutCourse.setText(detail.getCourseDescription());
+                binding.ivTutorAvatar.setImageResource(R.drawable.avatar);
+                binding.tvTutorSubject.setText("DESIGN");
+                binding.tvTutorName.setText("Huy");
+                binding.tvStudentCount.setText(String.valueOf(detail.getStudentQuantity()));
+                binding.tvLevel.setText(String.valueOf(detail.getLevel()));
+                binding.tvLevel.setText(detail.getLevel());
+                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH);
+
+                String formattedUpdate = sdf.format(detail.getUpdateAt());
+                String formattedCreated = sdf.format(detail.getCreatedAt());
+
+                binding.tvLastUpdate.setText(formattedUpdate);
+                binding.tvCreatedAt.setText(formattedCreated);
+
+                binding.tvAboutCourse.setMaxLines(3); // Initially show 3 lines
+
+                binding.tvReadMore.setOnClickListener(v -> {
+                    binding.tvAboutCourse.setMaxLines(Integer.MAX_VALUE);
+                    v.setVisibility(View.GONE);
+                });
+            }
         });
     }
     private void setupClickListeners() {

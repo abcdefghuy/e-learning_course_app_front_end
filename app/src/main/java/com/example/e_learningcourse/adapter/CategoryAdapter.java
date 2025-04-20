@@ -26,7 +26,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public void setCategories(List<CategoryResponse> categories) {
-        this.categories = categories;
+        this.categories = categories != null ? categories : new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -48,7 +48,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
 
     @Override
     public int getItemCount() {
-        return categories.size();
+        return categories != null ? categories.size() : 0;
     }
 
     class CategoryViewHolder extends RecyclerView.ViewHolder {

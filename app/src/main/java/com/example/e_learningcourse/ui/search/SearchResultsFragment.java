@@ -76,14 +76,8 @@ public class SearchResultsFragment extends Fragment {
             List<CourseDetailResponse> searchResults = new ArrayList<>();
 
             // Add sample courses that match the search query
-            if (query.toLowerCase().contains("design") || query.toLowerCase().contains("figma")) {
-                searchResults.add(new CourseDetailResponse("Introduction to Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
-                searchResults.add(new CourseDetailResponse("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
-                searchResults.add(new CourseDetailResponse("Advanced Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
-                searchResults.add(new CourseDetailResponse("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
-            }
 
-            resultsAdapter.setCourses(searchResults);
+            //resultsAdapter.setCourses(searchResults);
             binding.tvResultsCount.setText(searchResults.size() + " Results Found");
         } else { // Mentors tab
             resultsAdapter.setCourses(new ArrayList<>()); // Clear results for now

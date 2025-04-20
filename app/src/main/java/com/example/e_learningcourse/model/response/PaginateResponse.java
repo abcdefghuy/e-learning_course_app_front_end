@@ -2,20 +2,21 @@ package com.example.e_learningcourse.model.response;
 
 import java.util.List;
 
-public class PaginateCourseResponse {
-    private List<CourseDetailResponse> courses;
+public class PaginateResponse<T> {
+    private List<T> content;
     private int currentPage;
     private int pageSize;
     private int totalPages;
     private long totalElements;
     private boolean last;
 
-    public List<CourseDetailResponse> getCourse() {
-        return courses;
+    // Getters and Setters
+    public List<T> getContent() {
+        return content;
     }
 
-    public void setCourse(List<CourseDetailResponse> course) {
-        this.courses = course;
+    public void setContent(List<T> content) {
+        this.content = content;
     }
 
     public int getCurrentPage() {

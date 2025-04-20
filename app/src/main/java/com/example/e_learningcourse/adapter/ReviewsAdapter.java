@@ -9,17 +9,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.e_learningcourse.databinding.ItemReviewBinding;
 import com.example.e_learningcourse.model.Review;
+import com.example.e_learningcourse.model.response.ReviewResponse;
+import com.example.e_learningcourse.repository.ReviewRepository;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewViewHolder> {
 
-    private List<Review> reviews = new ArrayList<>();
+    private List<ReviewResponse> reviews = new ArrayList<>();
 
-    public void setReviews(List<Review> reviews) {
+    public void setReviews(List<ReviewResponse> reviews) {
         this.reviews = reviews;
         notifyDataSetChanged();
+    }
+    public void addReviews(List<ReviewResponse> newReviews){
+        int oldSize = reviews.size();
+        reviews.addAll(newReviews);
+        notifyItemRangeInserted(oldSize, newReviews.size());
     }
 
     @NonNull
@@ -51,15 +61,18 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewVi
             this.binding = binding;
         }
 
-        void bind(Review review) {
-            binding.tvReviewerName.setText(review.getReviewerName());
-            binding.tvReviewDate.setText(review.getReviewDate());
-            binding.ratingBar.setRating(review.getRating());
-            binding.tvReviewContent.setText(review.getContent());
+        void bind(ReviewResponse review) {
+            binding.tvReviewerName.setText(review.getReviewUserName());
+            Date date = review.getReviewDate(); // Giả sử kiểu Date
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            String formattedDate = sdf.format(date);
+            binding.tvReviewDate.setText(formattedDate);
+            binding.ratingBar.setRating(review.getReviewScore());
+            binding.tvReviewContent.setText(review.getReviewContent());
 
             // Load reviewer avatar
             Glide.with(binding.ivReviewerAvatar)
-                .load(review.getReviewerAvatar())
+                .load(review.getReviewerAvatarUrl())
                 .circleCrop()
                 .into(binding.ivReviewerAvatar);
         }

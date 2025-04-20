@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import com.example.e_learningcourse.databinding.ActivityMainBinding;
 import com.example.e_learningcourse.ui.HomeFragment;
 import com.example.e_learningcourse.ui.MessageFragment;
-import com.example.e_learningcourse.ui.MyCourseFragment;
+import com.example.e_learningcourse.ui.mycourse.MyCourseFragment;
 import com.example.e_learningcourse.ui.search.SearchActivity;
 import com.example.e_learningcourse.ui.SettingsActivity;
 

@@ -13,24 +13,35 @@ public class CourseDetailResponse {
     private Integer duration;
     private Date createdAt;
     private Date updateAt;
-    //private CourseLevel level;
+    private String level;
     private Double rating;
-    private int reviewCount;
     private int lessonCount;
+    private int reviewCount;
     private Integer studentQuantity;
     private List<String> categoryNames;
     private boolean isBestSeller;
     private boolean isBookmarked;
 
-    public CourseDetailResponse(String courseName, String instructorName, double coursePrice, int imageResId, boolean isBookmarked) {
+    public CourseDetailResponse(Long courseId, String courseName, boolean enabled, Double coursePrice, String courseImg, String courseDescription, Integer duration, Date createdAt, Date updateAt, String level, Double rating, int lessonCount, int reviewCount, Integer studentQuantity, List<String> categoryNames, boolean isBestSeller, boolean isBookmarked) {
+        this.courseId = courseId;
+        this.courseName = courseName;
+        this.enabled = enabled;
+        this.coursePrice = coursePrice;
+        this.courseImg = courseImg;
+        this.courseDescription = courseDescription;
+        this.duration = duration;
+        this.createdAt = createdAt;
+        this.updateAt = updateAt;
+        this.level = level;
+        this.rating = rating;
+        this.lessonCount = lessonCount;
+        this.reviewCount = reviewCount;
+        this.studentQuantity = studentQuantity;
+        this.categoryNames = categoryNames;
+        this.isBestSeller = isBestSeller;
+        this.isBookmarked = isBookmarked;
     }
-
-    public boolean isBookmarked() {
-        return isBookmarked;
-    }
-
-    public void setBookmarked(boolean bookmarked) {
-        isBookmarked = bookmarked;
+    public CourseDetailResponse() {
     }
 
     public Long getCourseId() {
@@ -105,6 +116,14 @@ public class CourseDetailResponse {
         this.updateAt = updateAt;
     }
 
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
     public Double getRating() {
         return rating;
     }
@@ -113,20 +132,20 @@ public class CourseDetailResponse {
         this.rating = rating;
     }
 
-    public int getReviewCount() {
-        return reviewCount;
-    }
-
-    public void setReviewCount(int reviewCount) {
-        this.reviewCount = reviewCount;
-    }
-
     public int getLessonCount() {
         return lessonCount;
     }
 
     public void setLessonCount(int lessonCount) {
         this.lessonCount = lessonCount;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
     }
 
     public Integer getStudentQuantity() {
@@ -151,5 +170,13 @@ public class CourseDetailResponse {
 
     public void setBestSeller(boolean bestSeller) {
         isBestSeller = bestSeller;
+    }
+
+    public boolean isBookmarked() {
+        return isBookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        isBookmarked = bookmarked;
     }
 }

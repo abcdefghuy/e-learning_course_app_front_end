@@ -11,24 +11,31 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ItemLessonBinding;
 import com.example.e_learningcourse.model.Lesson;
 import com.example.e_learningcourse.model.Section;
+import com.example.e_learningcourse.model.response.CourseResponse;
+import com.example.e_learningcourse.model.response.LessonResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonViewHolder> {
 
-    private List<Section> sections = new ArrayList<>();
+    private List<LessonResponse> sections = new ArrayList<>();
     private OnLessonClickListener listener;
 
     public interface OnLessonClickListener {
-        void onLessonClick(Lesson lesson);
+        void onLessonClick(LessonResponse lesson);
+    }
+    public void addLessons(List<LessonResponse> newLessons) {
+        int oldSize = sections.size();
+        sections.addAll(newLessons);
+        notifyItemRangeInserted(oldSize, newLessons.size());
     }
 
     public void setOnLessonClickListener(OnLessonClickListener listener) {
         this.listener = listener;
     }
 
-    public void setSections(List<Section> sections) {
+    public void setLesson(List<LessonResponse> sections) {
         this.sections = sections;
         notifyDataSetChanged();
     }
@@ -48,15 +55,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
     public void onBindViewHolder(@NonNull LessonViewHolder holder, int position) {
         // Calculate which section and lesson to show
         int currentPosition = 0;
-        for (Section section : sections) {
-            if (position == currentPosition) {
-                // Show section header
-                holder.bindSection(section);
-                return;
-            }
-            currentPosition++;
-
-            for (Lesson lesson : section.getLessons()) {
+            for (LessonResponse lesson : sections) {
                 if (position == currentPosition) {
                     // Show lesson
                     holder.bindLesson(lesson);
@@ -64,19 +63,11 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
                 }
                 currentPosition++;
             }
-        }
     }
 
     @Override
     public int getItemCount() {
-        int count = 0;
-        for (Section section : sections) {
-            // Add 1 for section header
-            count++;
-            // Add number of lessons in section
-            count += section.getLessons().size();
-        }
-        return count;
+        return sections.size();
     }
 
     class LessonViewHolder extends RecyclerView.ViewHolder {
@@ -97,30 +88,30 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
             itemView.findViewById(R.id.lessonLayout).setVisibility(View.GONE);
         }
 
-        void bindLesson(Lesson lesson) {
+        void bindLesson(LessonResponse lesson) {
             binding.tvSectionTitle.setVisibility(View.GONE);
             binding.tvSectionDuration.setVisibility(View.GONE);
 
             // Show lesson layout
             itemView.findViewById(R.id.lessonLayout).setVisibility(View.VISIBLE);
 
-            binding.tvLessonNumber.setText(lesson.getNumber());
-            binding.tvLessonTitle.setText(lesson.getTitle());
-            binding.tvLessonDuration.setText(lesson.getDuration());
+            binding.tvLessonNumber.setText(String.valueOf(lesson.getLessonOrder()));
+            binding.tvLessonTitle.setText(lesson.getLessonName());
+            binding.tvLessonDuration.setText(String.valueOf(lesson.getDuration()));
 
             // Set lesson status icon
             binding.ivLessonStatus.setImageResource(
-                lesson.isLocked() ? R.drawable.ic_lock : R.drawable.ic_play_circle
+                lesson.getStatus().equals("UNLOCKED") ? R.drawable.ic_play_circle : R.drawable.ic_lock
             );
             binding.ivLessonStatus.setImageTintList(
                 itemView.getContext().getColorStateList(
-                    lesson.isLocked() ? R.color.grey : R.color.blue
+                    lesson.getStatus().equals("UNLOCKED") ? R.color.blue : R.color.grey
                 )
             );
 
             // Set click listener
             itemView.setOnClickListener(v -> {
-                if (listener != null && !lesson.isLocked()) {
+                if (listener != null && !lesson.getStatus().equals("UNLOCKED")) {
                     listener.onLessonClick(lesson);
                 }
             });

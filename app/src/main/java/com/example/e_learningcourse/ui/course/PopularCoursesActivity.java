@@ -16,13 +16,14 @@ import com.example.e_learningcourse.adapter.CourseAdapter;
 import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
 import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.model.response.CourseResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PopularCoursesActivity extends AppCompatActivity implements CourseAdapter.OnBookmarkClickListener {
     private CourseAdapter adapter;
-    private List<CourseDetailResponse> courses;
+    private List<CourseResponse> courses;
     private RecyclerView recyclerView;
     private CourseViewModel courseViewModel;
     private boolean isLoading = false;
@@ -58,13 +59,12 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
                 if (isLoading) {
                     // Hide shimmer loading
                     adapter.showShimmer(false);
-
                     if (adapter.getItemCount() == 0) {
-                        adapter.setCourses(response.getCourse()); // Initial load
-                        Log.d("PopularCoursesActivity", "Initial load: " + response.getCourse().size());
+                        adapter.setCourses(response.getContent()); // Initial load
+                        Log.d("PopularCoursesActivity", "Initial load: " + response.getContent().size());
                     } else {
-                        adapter.addCourses(response.getCourse()); // Load more
-                        Log.d("PopularCoursesActivity", "Load more: " + response.getCourse().size());
+                        adapter.addCourses(response.getContent()); // Load more
+                        Log.d("PopularCoursesActivity", "Load more: " + response.getContent().size());
                     }
                     hasMoreData = !response.isLast(); // Use isLast from response
                     isLoading = false;
@@ -77,7 +77,6 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (layoutManager != null) {
                     int totalItemCount = layoutManager.getItemCount();
@@ -102,17 +101,15 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
 
     private void loadMoreCourses() {
         if (!hasMoreData) return;
-
         isLoading = true;
         courseViewModel.fetchCoursesNextPage();
     }
 
     @Override
-    public void onBookmarkClick(CourseDetailResponse course, int position) {
+    public void onBookmarkClick(CourseResponse course, int position) {
         // Toggle bookmark state
         boolean newBookmarkState = !course.isBookmarked();
         course.setBookmarked(newBookmarkState);
-
         // Show feedback to user
         String message = newBookmarkState ?
                 getString(R.string.bookmark_added) :

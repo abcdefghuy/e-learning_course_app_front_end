@@ -52,7 +52,7 @@
                     android:layout_height="40dp"
                     android:layout_marginEnd="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_bookmark_selector"
+                    android:src="@drawable/ic_bookmark"
                     app:tint="@android:color/black" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -89,21 +89,6 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <ImageButton
-                        android:id="@+id/btnPlay"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:background="@drawable/circle_white"
-                        android:src="@drawable/ic_play"
-                        app:tint="#2196F3" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Course Preview"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp" />
                 </LinearLayout>
             </FrameLayout>
 

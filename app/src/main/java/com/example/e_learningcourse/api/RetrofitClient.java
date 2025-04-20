@@ -3,35 +3,82 @@ package com.example.e_learningcourse.api;
 import static com.example.e_learningcourse.constants.Constants.BASE_URL;
 import static com.example.e_learningcourse.constants.Constants.TEST_URL;
 
+import com.example.e_learningcourse.App;
+import com.example.e_learningcourse.data.local.TokenManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
-    private static Retrofit retrofit;
-    private static final HttpLoggingInterceptor loggingInterceptor =
-            new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
 
-    private static final OkHttpClient client = new OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .build();
+    private static Retrofit authenticatedRetrofit;
+    private static Retrofit unauthenticatedRetrofit;
 
-    private static final Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
+    private static OkHttpClient authenticatedClient;
+    private static OkHttpClient unauthenticatedClient;
 
-    public static <S> S createService(Class<S> serviceClass) {
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
+    private static final Gson gson = new GsonBuilder().setLenient().create();
+
+    private static OkHttpClient getAuthenticatedClient() {
+        if (authenticatedClient == null) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            Interceptor tokenInterceptor = chain -> {
+                String token = TokenManager.getInstance(App.getContext()).getToken();
+                Request.Builder requestBuilder = chain.request().newBuilder();
+                if (token != null) {
+                    requestBuilder.addHeader("Authorization", "Bearer " + token);
+                }
+                return chain.proceed(requestBuilder.build());
+            };
+
+            authenticatedClient = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .addInterceptor(tokenInterceptor)
+                    .build();
+        }
+        return authenticatedClient;
+    }
+
+    private static OkHttpClient getUnauthenticatedClient() {
+        if (unauthenticatedClient == null) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            unauthenticatedClient = new OkHttpClient.Builder()
+                    .addInterceptor(logging)
+                    .build();
+        }
+        return unauthenticatedClient;
+    }
+
+    // Dành cho các API cần token
+    public static <S> S createAuthenticatedService(Class<S> serviceClass) {
+        if (authenticatedRetrofit == null) {
+            authenticatedRetrofit = new Retrofit.Builder()
                     .baseUrl(TEST_URL)
-                    .client(client)
+                    .client(getAuthenticatedClient())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
-        return retrofit.create(serviceClass);
+        return authenticatedRetrofit.create(serviceClass);
+    }
+
+    // Dành cho login, register...
+    public static <S> S createUnauthenticatedService(Class<S> serviceClass) {
+        if (unauthenticatedRetrofit == null) {
+            unauthenticatedRetrofit = new Retrofit.Builder()
+                    .baseUrl(TEST_URL)
+                    .client(getUnauthenticatedClient())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build();
+        }
+        return unauthenticatedRetrofit.create(serviceClass);
     }
 }
+
