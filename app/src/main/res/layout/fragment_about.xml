@@ -76,6 +76,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvTutorSubject"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Design"
@@ -109,6 +110,45 @@
             android:textColor="#212121"
             android:textSize="18sp"
             android:textStyle="bold" />
+        <!-- Level -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Level"
+                android:textColor="#757575" />
+
+            <TextView
+                android:id="@+id/tvLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Beginner"
+                android:textColor="#212121" />
+        </LinearLayout>
+
+        <!-- Category -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textColor="#757575" />
+
+            <TextView
+                android:id="@+id/tvCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Design"
+                android:textColor="#212121" />
+        </LinearLayout>
 
         <!-- Students -->
         <LinearLayout
@@ -130,7 +170,7 @@
                 android:textColor="#212121" />
         </LinearLayout>
 
-        <!-- Language -->
+        <!-- Create At -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -139,13 +179,14 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Language"
+                android:text="Created at"
                 android:textColor="#757575" />
 
             <TextView
+                android:id="@+id/tvCreatedAt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="English"
+                android:text="Feb 2, 2023"
                 android:textColor="#212121" />
         </LinearLayout>
 
@@ -178,53 +219,16 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Subtitle"
+                android:text="Duration"
                 android:textColor="#757575" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="English and 3 more"
+                android:text="3 hours"
                 android:textColor="#2196F3" />
         </LinearLayout>
 
-        <!-- Level -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
 
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Level"
-                android:textColor="#757575" />
-
-            <TextView
-                android:id="@+id/tvLevel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Beginner"
-                android:textColor="#212121" />
-        </LinearLayout>
-
-        <!-- Access -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
-
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Access"
-                android:textColor="#757575" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mobile, Desktop"
-                android:textColor="#212121" />
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

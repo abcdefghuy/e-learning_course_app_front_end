@@ -1,6 +1,4 @@
-package com.example.e_learningcourse.ui;
-
-import static androidx.core.content.ContentProviderCompat.requireContext;
+package com.example.e_learningcourse.ui.bookmark;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -19,9 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.CourseAdapter;
-import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
-import com.example.e_learningcourse.model.Course;
-import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.model.response.CourseResponse;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -30,7 +26,7 @@ import java.util.List;
 
 public class BookMarkActivity extends AppCompatActivity implements CourseAdapter.OnBookmarkClickListener {
     private CourseAdapter adapter;
-    private List<CourseDetailResponse> bookmarkedCourses;
+    private List<CourseResponse> bookmarkedCourses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +49,19 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
 
     private void initializeBookmarkedCourses() {
         bookmarkedCourses = new ArrayList<>();
-        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new CourseDetailResponse("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new CourseDetailResponse("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
-        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
+//        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
+//        bookmarkedCourses.add(new CourseDetailResponse("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
+//        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
+//        bookmarkedCourses.add(new CourseDetailResponse("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
+//        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
     }
 
     @Override
-    public void onBookmarkClick(CourseDetailResponse course, int position) {
+    public void onBookmarkClick(CourseResponse course, int position) {
         showRemoveDialog(course, position);
     }
 
-    private void showRemoveDialog(CourseDetailResponse course, int position) {
+    private void showRemoveDialog(CourseResponse course, int position) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_remove_bookmark);

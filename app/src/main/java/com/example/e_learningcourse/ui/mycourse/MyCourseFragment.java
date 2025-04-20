@@ -1,4 +1,4 @@
-package com.example.e_learningcourse.ui;
+package com.example.e_learningcourse.ui.mycourse;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.FragmentMycourseBinding;
+import com.example.e_learningcourse.ui.mycourse.ContinueCourseFragment;
+import com.example.e_learningcourse.ui.lesson.LessonsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class MyCourseFragment extends Fragment {
@@ -29,7 +31,6 @@ public class MyCourseFragment extends Fragment {
         setupTabLayout();
         // Show ContinueCourseFragment by default
         showFragment(new ContinueCourseFragment());
-        binding.btnBack.setOnClickListener(v -> requireActivity().onBackPressed());
     }
 
     private void setupTabLayout() {
@@ -38,11 +39,8 @@ public class MyCourseFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 Fragment fragment;
                 switch (tab.getPosition()) {
-                    case 0: // Ongoing tab
-                        fragment = new ContinueCourseFragment();
-                        break;
                     case 1: // Completed tab
-                        fragment = new LessonsFragment(); // You can create a CompletedCoursesFragment later
+                        fragment = new CompleteCourseFragment(); // You can create a CompletedCoursesFragment later
                         break;
                     default:
                         fragment = new ContinueCourseFragment();

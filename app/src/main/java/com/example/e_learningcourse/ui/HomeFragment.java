@@ -3,6 +3,7 @@ package com.example.e_learningcourse.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,17 @@ import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
 import com.example.e_learningcourse.databinding.FragmentHomeBinding;
 import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.Mentor;
-import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.model.response.ContinueCourseResponse;
+import com.example.e_learningcourse.model.response.CourseResponse;
+import com.example.e_learningcourse.ui.bookmark.BookMarkActivity;
 import com.example.e_learningcourse.ui.category.CategoryActivity;
 import com.example.e_learningcourse.ui.category.CategoryViewModel;
-import com.example.e_learningcourse.ui.course.CourseDetailsActivity;
 import com.example.e_learningcourse.ui.course.CourseViewModel;
 import com.example.e_learningcourse.ui.course.PopularCoursesActivity;
+import com.example.e_learningcourse.ui.mycourse.ContinueCourseViewModel;
+import com.example.e_learningcourse.ui.mycourse.ContinueLearningActivity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,8 +45,7 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
     private ContinueLearningAdapter continueLearningAdapter;
     private CategoryViewModel categoryViewModel;
     private CourseViewModel courseViewModel;
-    private int currentPage = 1;
-    private final int pageSize = 4;
+    private ContinueCourseViewModel continueCourseViewModel;
     private boolean isLoading = false;
     private boolean isLastPage = false;
 
@@ -57,6 +61,7 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         super.onViewCreated(view, savedInstanceState);
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
+        continueCourseViewModel = new ViewModelProvider(this).get(ContinueCourseViewModel.class);
         setupRecyclerViews();
         loadSampleData();
         // Lấy View từ include
@@ -92,10 +97,6 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
             Intent intent = new Intent(requireContext(), ContinueLearningActivity.class);
             startActivity(intent);
         });
-        includedView.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), CourseDetailsActivity.class);
-            startActivity(intent);
-        });
     }
 
     private void setupRecyclerViews() {
@@ -103,28 +104,18 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         popularCoursesAdapter = new PopularCoursesAdapter(requireContext());
         popularCoursesAdapter.setOnCourseClickListener(this);
         popularCoursesAdapter.setHeaderBookmarkView(binding.ibBookmark);
+        continueLearningAdapter = new ContinueLearningAdapter(requireContext());
         mentorAdapter = new MentorAdapter();
-        continueLearningAdapter = new ContinueLearningAdapter(List.of(
-                new Course(
-                        3,
-                        "Flutter Mobile Development",
-                        "Alex Turner",
-                        R.drawable.ic_business,
-                        0,
-                        4.7f,
-                        69.99,20
-                )
-        ));
         // Set up click listener for continue learning items
         binding.rvCategories.setAdapter(categoryAdapter);
         binding.rvPopularCourses.setAdapter(popularCoursesAdapter);
         binding.rvMentors.setAdapter(mentorAdapter);
         binding.rvContinueLearning.setAdapter(continueLearningAdapter);
     }
-
     private void loadSampleData() {
         loadCategories();
         loadPopularCourse();
+        loadContinueLearning();
         // Sample Mentors
         mentorAdapter.setMentors(Arrays.asList(
                 new Mentor(1, "David Wilson", R.drawable.avatar),
@@ -142,7 +133,7 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
     }
 
     @Override
-    public void onBookmarkClick(CourseDetailResponse course, int position) {
+    public void onBookmarkClick(CourseResponse course, int position) {
         // Toggle bookmark state
         boolean newBookmarkState = !course.isBookmarked();
         course.setBookmarked(newBookmarkState);
@@ -169,9 +160,20 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         courseViewModel.fetchTopSellingCourses();
         courseViewModel.getCourses().observe(getViewLifecycleOwner(), response -> {
             if (response != null) {
-                popularCoursesAdapter.setCourses(response.getCourse());
+                popularCoursesAdapter.setCourses(response.getContent());
                 isLastPage = response.isLast(); // Cập nhật trạng thái phân trang
                 isLoading = false;
+            }
+        });
+    }
+    private void loadContinueLearning() {
+        continueCourseViewModel.fetchCoursesInProgress();
+        continueCourseViewModel.getCourseDetails().observe(getViewLifecycleOwner(), response -> {
+            if (response != null) {
+                // Kiểm tra xem có dữ liệu hay không
+                List<ContinueCourseResponse> courses = new ArrayList<>();
+                courses.add(response);
+                continueLearningAdapter.setCourses(courses);
             }
         });
     }

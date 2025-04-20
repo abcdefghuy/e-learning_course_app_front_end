@@ -18,7 +18,7 @@ import retrofit2.Response;
 public class CategoryRepository {
     private CategoryApi api;
     public CategoryRepository() {
-        api = RetrofitClient.createService(CategoryApi.class);
+        api = RetrofitClient.createAuthenticatedService(CategoryApi.class);
     }
     // Add methods to fetch categories from the API
     public LiveData<List<CategoryResponse>> getAllCategories() {
@@ -31,7 +31,7 @@ public class CategoryRepository {
                     Log.d("CATEGORY_SUCCESS", response.body().toString());
                 } else {
                     categoryLiveData.setValue(null);
-                    Log.e("CATEGORY_ERROR", "Empty or error response");
+                    Log.e("CATEGORY_ERROR", String.valueOf(response.code()));
                 }
             }
 

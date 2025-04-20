@@ -17,6 +17,7 @@ import com.example.e_learningcourse.adapter.RecentSearchAdapter;
 import com.example.e_learningcourse.databinding.FragmentRecentSearchBinding;
 import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.model.response.CourseResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,16 +71,13 @@ public class SearchRecentFragment extends Fragment {
 
         // Add sample data
         recentCourses = new ArrayList<>();
-        recentCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
-        recentCourses.add(new CourseDetailResponse("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
-        recentCourses.add(new CourseDetailResponse("Introduction of Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
-        recentCourses.add(new CourseDetailResponse("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
+
 
         // Debug logging
         System.out.println("Setting up recent view list with " + recentCourses.size() + " courses");
 
         // Set courses to adapter
-        recentViewAdapter.setCourses(recentCourses);
+       // recentViewAdapter.setCourses(recentCourses);
 
         // Force layout update
         binding.rvRecentView.requestLayout();

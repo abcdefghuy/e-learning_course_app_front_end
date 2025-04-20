@@ -2,6 +2,7 @@ package com.example.e_learningcourse.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.example.e_learningcourse.databinding.ItemCourseShimmerBinding;
 import com.example.e_learningcourse.databinding.ItemPopularCourseBinding;
 import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.course.CourseDetailsActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -30,8 +32,10 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private static final int VIEW_TYPE_ITEM = 0;
     private static final int VIEW_TYPE_SHIMMER = 1;
 
-    private List<CourseDetailResponse> courses = new ArrayList<>();
+    private List<CourseResponse> courses = new ArrayList<>();
     private OnCourseClickListener listener;
+    private OnItemClickListener listeners;
+
     private View headerBookmarkView;
     private Context context;
     private boolean showShimmer = false;
@@ -40,8 +44,16 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.context = context;
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(CourseResponse course);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listeners = listener;
+    }
+
     public interface OnCourseClickListener {
-        void onBookmarkClick(CourseDetailResponse course, int position);
+        void onBookmarkClick(CourseResponse course, int position);
     }
 
     public void setOnCourseClickListener(OnCourseClickListener listener) {
@@ -52,7 +64,7 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.headerBookmarkView = view;
     }
 
-    public void setCourses(List<CourseDetailResponse> courses) {
+    public void setCourses(List<CourseResponse> courses) {
         this.courses = courses != null ? courses : new ArrayList<>();
         notifyDataSetChanged();
     }
@@ -84,7 +96,7 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CourseViewHolder) {
-            CourseDetailResponse course = courses.get(position);
+            CourseResponse course = courses.get(position);
             ((CourseViewHolder) holder).bind(course, position);
         } else if (holder instanceof ShimmerViewHolder) {
             ((ShimmerViewHolder) holder).bind();
@@ -104,13 +116,25 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             this.binding = binding;
         }
 
-        public void bind(CourseDetailResponse course, int position) {
+        public void bind(CourseResponse course, int position) {
             binding.tvCourseTitle.setText(course.getCourseName());
             binding.tvInstructorName.setText("Huy");
             binding.tvRating.setText(String.format(Locale.getDefault(), "%.1f", course.getRating()));
-            binding.tvPrice.setText(String.format(Locale.US, "$%.2f", course.getCoursePrice()));
-            binding.ivBookmark.setSelected(course.isBookmarked());
 
+            Log.d("PopularCoursesAdapter", "Binding course: " + course.getCourseName());
+            Log.d("PopularCoursesAdapter", "Course price: " + course.getCoursePrice());
+            Log.d("PopularCoursesAdapter", "Is best seller: " + course.isBestSeller());
+
+            String priceText = String.format(Locale.getDefault(), "$%.2f", course.getCoursePrice());
+            binding.tvPrice.setText(priceText);
+            binding.tvPrice.setVisibility(View.VISIBLE);
+            Log.d("PopularCoursesAdapter", "Price text set to: " + priceText);
+
+            boolean isBestSeller = course.isBestSeller();
+            binding.tvBestSeller.setVisibility(isBestSeller ? View.VISIBLE : View.GONE);
+            Log.d("PopularCoursesAdapter", "Best seller visibility: " + (isBestSeller ? "VISIBLE" : "GONE"));
+            
+            binding.ivBookmark.setSelected(course.isBookmarked());
             Glide.with(context)
                     .load(course.getCourseImg())
                     //.placeholder(R.drawable.placeholder_img)
@@ -129,7 +153,7 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), CourseDetailsActivity.class);
-                intent.putExtra("course_id", course.getCourseId());
+                intent.putExtra("courseId", course.getCourseId());
                 v.getContext().startActivity(intent);
             });
         }

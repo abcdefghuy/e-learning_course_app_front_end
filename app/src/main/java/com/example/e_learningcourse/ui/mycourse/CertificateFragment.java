@@ -1,4 +1,4 @@
-package com.example.e_learningcourse.ui;
+package com.example.e_learningcourse.ui.mycourse;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

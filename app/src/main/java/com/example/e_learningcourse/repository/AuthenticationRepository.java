@@ -24,7 +24,7 @@ public class AuthenticationRepository extends BaseRepository {
     private final AuthenticationAPI api;
 
     public AuthenticationRepository() {
-        this.api = RetrofitClient.createService(AuthenticationAPI.class);
+        this.api = RetrofitClient.createUnauthenticatedService(AuthenticationAPI.class);
     }
 
     public LiveData<ApiResponse<LoginResponse>> login(String email, String password) {

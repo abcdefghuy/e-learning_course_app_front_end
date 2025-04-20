@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,27 +12,42 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.model.Course;
-import com.example.e_learningcourse.ui.CoursesActivity;
+import com.example.e_learningcourse.model.response.ContinueCourseResponse;
+import com.example.e_learningcourse.ui.mycourse.CoursesActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class ContinueLearningAdapter extends RecyclerView.Adapter<ContinueLearningAdapter.CourseViewHolder> {
-    private final List<Course> courses;
+    private List<ContinueCourseResponse> courses;
     private OnItemClickListener listener;
+    private final Context context;
+
+    public void addCourses(List<ContinueCourseResponse> content) {
+        int oldSize = content.size();
+        courses.addAll(content);
+        notifyItemRangeInserted(oldSize, content.size());
+    }
 
     public interface OnItemClickListener {
-        void onItemClick(Course course);
+        void onItemClick(ContinueCourseResponse course);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public ContinueLearningAdapter(List<Course> courses) {
-        this.courses = courses;
+    public ContinueLearningAdapter(Context context) {
+        this.context = context;
+        this.courses = new ArrayList<>();
+    }
+    public void setCourses(List<ContinueCourseResponse> courses) {
+        this.courses = courses != null ? courses : new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -44,7 +60,7 @@ public class ContinueLearningAdapter extends RecyclerView.Adapter<ContinueLearni
 
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-        Course course = courses.get(position);
+        ContinueCourseResponse course = courses.get(position);
         holder.bind(course);
     }
 
@@ -78,20 +94,23 @@ public class ContinueLearningAdapter extends RecyclerView.Adapter<ContinueLearni
             });
         }
 
-        public void bind(Course course) {
-            courseImage.setImageResource(course.getThumbnailResId());
+        public void bind(ContinueCourseResponse course) {
+            Glide.with(context)
+                    .load(course.getCourseImageUrl())
+                    //.placeholder(R.drawable.ic_placeholder)
+                    .into(courseImage);
             courseCategory.setText("Design"); // You can make this dynamic if needed
-            courseTitle.setText(course.getTitle());
-            instructorName.setText(course.getInstructor());
+            courseTitle.setText(course.getCourseTitle());
+            instructorName.setText("Huy");
             
             // Set progress
             int progress = course.getProgress();
             progressBar.setProgress(progress);
-            progressText.setText(String.format(Locale.getDefault(), "%d/25", progress));
+            progressText.setText(String.format(Locale.getDefault(), "%d%%", progress));
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), CoursesActivity.class);
-//                intent.putExtra("course_id", course.getId());
+                intent.putExtra("coursedId", course.getCourseId());
 //                intent.putExtra("course_title", course.getTitle());
 //                intent.putExtra("course_instructor", course.getInstructor());
 //                intent.putExtra("course_thumbnail", course.getThumbnailResId());

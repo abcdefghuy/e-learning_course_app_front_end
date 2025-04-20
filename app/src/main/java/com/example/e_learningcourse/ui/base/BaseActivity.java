@@ -1,6 +1,7 @@
 package com.example.e_learningcourse.ui.base;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -36,6 +37,7 @@ public abstract class BaseActivity<B extends ViewDataBinding, VM extends ViewMod
             baseVM.getErrorMessage().observe(this, message -> {
                 if (message != null && !message.isEmpty()) {
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                    Log.d("BaseActivity", "Error: " + message);
                 }
             });
         }

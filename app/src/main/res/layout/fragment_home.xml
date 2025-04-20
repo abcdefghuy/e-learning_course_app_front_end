@@ -147,8 +147,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPopularCourses"
-            android:layout_width="408dp"
-            android:layout_height="247dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
@@ -204,6 +204,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             tools:itemCount="1"
             tools:listitem="@layout/item_continue_learning"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
