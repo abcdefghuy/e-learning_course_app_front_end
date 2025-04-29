@@ -23,7 +23,12 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             String token = TokenManager.getInstance(getApplicationContext()).getToken();
             if (token != null && !token.isEmpty()) {
-                startActivity(new Intent(this, MainActivity.class));
+                if(TokenManager.getInstance(getApplicationContext()).isTokenExpired()) {
+                    startActivity(new Intent(this, LoginActivity.class));
+                } else {
+                    // Token is valid, proceed to MainActivity
+                    startActivity(new Intent(this, MainActivity.class));
+                }
             } else {
                 startActivity(new Intent(this, LoginActivity.class));
             }

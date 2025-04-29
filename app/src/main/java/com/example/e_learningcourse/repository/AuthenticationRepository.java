@@ -34,6 +34,7 @@ public class AuthenticationRepository extends BaseRepository {
             if (response != null && response.isSuccess() && response.getData() != null) {
                 String token = response.getData().getToken();
                 TokenManager.getInstance(App.getContext()).saveToken(token);
+                TokenManager.getInstance(App.getContext()).saveExpiredToken(String.valueOf(response.getData().getExpiresIn()));
             }
         });
         return liveData;

@@ -1,4 +1,4 @@
-package com.example.e_learningcourse.ui;
+package com.example.e_learningcourse.ui.course;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,18 +12,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.FragmentAboutBinding;
-import com.example.e_learningcourse.ui.course.SharedCourseViewModel;
-import com.example.e_learningcourse.ui.review.ReviewViewModel;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
-public class AboutFragment extends Fragment {
+public class AboutCourseFragment extends Fragment {
     private FragmentAboutBinding binding;
 
-    public static AboutFragment newInstance() {
-        return new AboutFragment();
+    public static AboutCourseFragment newInstance() {
+        return new AboutCourseFragment();
     }
     private Long courseId;
     private SharedCourseViewModel sharedViewModel;

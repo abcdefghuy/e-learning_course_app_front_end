@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.ui.lesson;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,17 +18,20 @@ import com.example.e_learningcourse.adapter.LessonsAdapter;
 import com.example.e_learningcourse.databinding.FragmentLessonsBinding;
 import com.example.e_learningcourse.model.Lesson;
 import com.example.e_learningcourse.model.Section;
+import com.example.e_learningcourse.model.response.LessonResponse;
 import com.example.e_learningcourse.ui.course.CourseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class LessonsFragment extends Fragment {
+public class LessonsFragment extends Fragment implements LessonsAdapter.OnLessonClickListener {
 
     private FragmentLessonsBinding binding;
     private LessonsAdapter adapter;
     private boolean isLoading = false;
     private boolean hasMoreData = true;
+    private List<LessonResponse> allLessons = new ArrayList<>();
 
     private LessonViewModel lessonViewModel;
 
@@ -66,6 +70,7 @@ public class LessonsFragment extends Fragment {
                         adapter.addLessons(response.getContent()); // Load more
                         Log.d("PopularCoursesActivity", "Load more: " + response.getContent().size());
                     }
+                    allLessons.addAll(response.getContent());
                     hasMoreData = !response.isLast();
                     isLoading = false;
                 }
@@ -80,7 +85,6 @@ public class LessonsFragment extends Fragment {
                 if (layoutManager != null) {
                     int totalItemCount = layoutManager.getItemCount();
                     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-
                     if (!isLoading && hasMoreData && lastVisibleItemPosition + 2 >= totalItemCount) {
                         loadMoreLessons(courseId);
                     }
@@ -93,6 +97,7 @@ public class LessonsFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new LessonsAdapter();
+        adapter.setOnLessonClickListener(this);
         binding.rvLessons.setAdapter(adapter);
     }
 
@@ -111,5 +116,22 @@ public class LessonsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+    @Override
+    public void onLessonClick(LessonResponse currentLesson) {
+        if (currentLesson == null) {
+            Log.e("LessonsFragment", "Clicked lesson is null");
+            return;
+        }
+        
+        Log.d("LessonsFragment", "Lesson clicked: " + currentLesson.getLessonId());
+        List<LessonResponse> nextLessons = allLessons.stream()
+                .filter(lesson -> !lesson.getLessonId().equals(currentLesson.getLessonId()))
+                .collect(Collectors.toList());
+                
+        Intent intent = new Intent(requireContext(), LessonPlayerActivity.class);
+        intent.putExtra("current_lesson", currentLesson);
+        intent.putParcelableArrayListExtra("next_lessons", new ArrayList<>(nextLessons));
+        startActivity(intent);
     }
 } 

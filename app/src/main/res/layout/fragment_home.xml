@@ -39,6 +39,7 @@
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:fontFamily="sans-serif-medium"
+                android:layout_marginEnd="140dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,6 +48,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="140dp"
                 android:text="Let's start learning!"
                 android:textColor="#E3F2FD"
                 android:textSize="16sp"
@@ -59,11 +61,12 @@
                 android:id="@+id/actionIconsRow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="@id/tvSubtitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tvWelcome"
-                app:layout_constraintBottom_toBottomOf="@id/tvSubtitle">
+                app:layout_constraintVertical_bias="0.0">
 
                 <!-- Bookmark -->
                 <LinearLayout
@@ -81,8 +84,8 @@
                         android:id="@+id/ibBookmark"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:padding="6dp"
                         android:background="@drawable/circle_ripple_background"
+                        android:padding="6dp"
                         android:src="@drawable/ic_bookmark"
                         app:tint="@color/white" />
 

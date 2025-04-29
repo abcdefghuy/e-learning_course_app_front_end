@@ -149,6 +149,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
@@ -159,105 +160,12 @@
         app:layout_constraintTop_toBottomOf="@id/topTabLayout">
 
         <LinearLayout
+            android:id="@+id/faqContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/layoutFaqItem"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Can I access my courses offline?"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:id="@+id/imgArrow"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_marginStart="16dp"
-                                android:src="@drawable/ic_arrow_down"
-                                app:tint="@color/blue" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tvAnswer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="Yes, you can download course materials and access them offline. This is great for learning on the go, especially when you don't have an internet connection."
-                            android:textColor="@color/gray_600"
-                            android:textSize="14sp"
-                            android:visibility="gone" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/background" />
-
-                    <!-- More FAQ items -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/selectableItemBackground"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="How do I enroll in a course?"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:layout_marginStart="16dp"
-                            android:src="@drawable/ic_arrow_down"
-                            app:tint="@color/blue" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/background" />
-
-                    <!-- Add more FAQ items here -->
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+            <!-- FAQ items will be added here dynamically -->
 
         </LinearLayout>
 

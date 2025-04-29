@@ -17,6 +17,7 @@ import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
 import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.example.e_learningcourse.model.response.CourseResponse;
+import com.example.e_learningcourse.ui.bookmark.BookmarkViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
     private List<CourseResponse> courses;
     private RecyclerView recyclerView;
     private CourseViewModel courseViewModel;
+    private BookmarkViewModel bookmarkViewModel;
     private boolean isLoading = false;
     private boolean hasMoreData = true;
 
@@ -36,10 +38,13 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
 
         // Initialize ViewModel
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
-
+        bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
         // Set up back button
         ImageButton backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> finish());
+        backButton.setOnClickListener(v -> {
+            setResult(RESULT_OK);
+            finish();
+        });
 
         // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
@@ -109,17 +114,14 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
     public void onBookmarkClick(CourseResponse course, int position) {
         // Toggle bookmark state
         boolean newBookmarkState = !course.isBookmarked();
-        course.setBookmarked(newBookmarkState);
-        // Show feedback to user
+        course.setBookmarked(newBookmarkState); // cập nhật trạng thái
+        // Gọi ViewModel để xử lý thêm hoặc xóa bookmark
+        bookmarkViewModel.toggleBookmark(course.getCourseId(), newBookmarkState);
+        // Thông báo và cập nhật UI
         String message = newBookmarkState ?
                 getString(R.string.bookmark_added) :
                 getString(R.string.bookmark_removed);
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-        // Update the UI
         adapter.notifyItemChanged(position);
-
-        // Here you could also save the bookmark state to persistent storage
-        // saveBookmarkState(course);
     }
 }

@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ActivityCourseDetailsBinding;
-import com.example.e_learningcourse.ui.AboutFragment;
 import com.example.e_learningcourse.ui.lesson.LessonsFragment;
 import com.example.e_learningcourse.ui.review.ReviewsFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -42,7 +41,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         loadCourseDetails(courseId);
         // Show About fragment by default
         if (savedInstanceState == null) {
-            showFragment(new AboutFragment(), courseId);
+            showFragment(new AboutCourseFragment(), courseId);
         }
         loadCourseDetails(courseId);
     }
@@ -96,7 +95,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
                         fragment = new ReviewsFragment();
                         break;
                     default:
-                        fragment = new AboutFragment();
+                        fragment = new AboutCourseFragment();
                         break;
                 }
                 showFragment(fragment, courseId);

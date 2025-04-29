@@ -25,6 +25,8 @@ public class LessonViewModel extends BaseViewModel {
     public LiveData<PaginateResponse<LessonResponse>> getLessons() {
         return lessons;
     }
+    private MutableLiveData<Boolean> _lessonUpdateResult = new MutableLiveData<>();
+    public LiveData<Boolean> lessonUpdateResult = _lessonUpdateResult;
 
 
     public void fetchLessonsByCourse(Long courseId) {
@@ -32,11 +34,20 @@ public class LessonViewModel extends BaseViewModel {
         isLoading = true;
         lessonRepository.getLessonByCourse(courseId,currentPage, pageSize).observeForever(response -> {
             if (response != null) {
-                isLastPage = response.isLast();
+                isLastPage = response.getData().isLast();
                 currentPage++;
-                _lessons.setValue(response);
+                _lessons.setValue(response.getData());
             }
             isLoading = false;
+        });
+    }
+    public void updateLessonProgress(Long lessonId) {
+        lessonRepository.updateLessonProgress(lessonId).observeForever(response -> {
+            if (response != null) {
+                _lessonUpdateResult.postValue(true); // Thành công
+            } else {
+                _lessonUpdateResult.postValue(false); // Thất bại
+            }
         });
     }
 

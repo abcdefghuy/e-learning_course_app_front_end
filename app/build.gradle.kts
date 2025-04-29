@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.e_learningcourse"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -54,4 +54,16 @@ dependencies {
     implementation(libs.security.crypto)
     implementation(libs.logging.interceptor)
     implementation(libs.shimmer)
+    implementation(libs.dotlottie)
+    implementation(libs.media3exoplayer)
+    implementation(libs.media3ui)
+    implementation(libs.media3exoplayerdash)
+    implementation(libs.media3exoplayerhls)
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:custom-ui:12.1.0")
+    implementation("com.cloudinary:cloudinary-android:3.0.2")
+
+
+
+
 }

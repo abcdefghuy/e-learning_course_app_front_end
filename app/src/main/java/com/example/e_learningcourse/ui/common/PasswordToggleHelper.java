@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.ui.common;
 
+import android.annotation.SuppressLint;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.widget.EditText;
@@ -8,6 +9,7 @@ import com.example.e_learningcourse.R;
 
 public class PasswordToggleHelper {
 
+    @SuppressLint("ClickableViewAccessibility")
     public static void setupPasswordToggle(EditText editText) {
         final boolean[] isPasswordVisible = {false};
 

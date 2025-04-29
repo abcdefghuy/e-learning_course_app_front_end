@@ -1,6 +1,7 @@
 package com.example.e_learningcourse.ui.category;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -9,6 +10,8 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.CategoryAdapter;
 import com.example.e_learningcourse.databinding.ActivityCategoryBinding;
 import com.example.e_learningcourse.model.Category;
+import com.example.e_learningcourse.ui.search.SearchActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +42,9 @@ public class CategoryActivity extends AppCompatActivity {
         binding.rvCategories.setLayoutManager(layoutManager);
         binding.rvCategories.setAdapter(adapter);
         adapter.setOnCategoryClickListener(category -> {
-            // Handle category click
-            // For example, start a new activity with the selected category
+            Intent intent = new Intent(CategoryActivity.this, SearchActivity.class);
+            intent.putExtra("CATEGORY_NAME", category.getCategoryName()); // Truyền tên danh mục vào intent
+            startActivity(intent);
         });
     }
 

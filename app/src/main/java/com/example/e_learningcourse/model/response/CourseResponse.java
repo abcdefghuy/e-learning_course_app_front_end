@@ -6,7 +6,7 @@ public class CourseResponse {
     private boolean enabled;
     private Double coursePrice;
     private String courseImg;
-    private boolean isBookmarked;
+    private boolean bookmarked;
     private Double rating;
     private boolean bestSeller;
 
@@ -70,10 +70,9 @@ public class CourseResponse {
     }
 
     public boolean isBookmarked() {
-        return isBookmarked;
+        return bookmarked;
     }
-
     public void setBookmarked(boolean bookmarked) {
-        isBookmarked = bookmarked;
+        this.bookmarked = bookmarked;
     }
 }

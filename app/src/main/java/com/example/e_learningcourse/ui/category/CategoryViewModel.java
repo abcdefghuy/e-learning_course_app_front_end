@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CategoryViewModel extends BaseViewModel {
     private final CategoryRepository repository;
-    private MutableLiveData<List<CategoryResponse>> categories = new MutableLiveData<>();
+    private final MutableLiveData<List<CategoryResponse>> categories = new MutableLiveData<>();
 
     public CategoryViewModel() {
         repository = new CategoryRepository();
@@ -22,7 +22,10 @@ public class CategoryViewModel extends BaseViewModel {
 
     public void fetchCategories() {
         repository.getAllCategories().observeForever(response -> {
-            categories.setValue(response);
+            if (response == null || response.getData() == null) {
+                return;
+            }
+            categories.setValue(response.getData());
         });
     }
 
