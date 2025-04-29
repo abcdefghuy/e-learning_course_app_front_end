@@ -9,4 +9,4 @@
     android:paddingHorizontal="16dp"
     android:clipToPadding="false"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    tools:listitem="@layout/item_lesson" /> 
+    tools:listitem="@layout/item_lesson" />

@@ -64,14 +64,11 @@ public class CompleteCourseFragment extends Fragment {
                 if (layoutManager != null) {
                     int totalItemCount = layoutManager.getItemCount();
                     int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-
                     if (!isLoading && hasMoreData && lastVisibleItemPosition + 2 >= totalItemCount) {
                         loadMoreCourses();
                     }
                 }
             }
-
-
         });
         loadCourses();
     }

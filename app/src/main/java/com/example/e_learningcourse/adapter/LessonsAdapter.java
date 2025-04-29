@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,12 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
 
     private List<LessonResponse> sections = new ArrayList<>();
     private OnLessonClickListener listener;
-
     public interface OnLessonClickListener {
-        void onLessonClick(LessonResponse lesson);
+        void onLessonClick(LessonResponse currentLesson);
+    }
+
+    public void setOnLessonClickListener(OnLessonClickListener listener) {
+        this.listener = listener;
     }
     public void addLessons(List<LessonResponse> newLessons) {
         int oldSize = sections.size();
@@ -31,9 +35,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
         notifyItemRangeInserted(oldSize, newLessons.size());
     }
 
-    public void setOnLessonClickListener(OnLessonClickListener listener) {
-        this.listener = listener;
-    }
 
     public void setLesson(List<LessonResponse> sections) {
         this.sections = sections;
@@ -53,16 +54,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
 
     @Override
     public void onBindViewHolder(@NonNull LessonViewHolder holder, int position) {
-        // Calculate which section and lesson to show
-        int currentPosition = 0;
-            for (LessonResponse lesson : sections) {
-                if (position == currentPosition) {
-                    // Show lesson
-                    holder.bindLesson(lesson);
-                    return;
-                }
-                currentPosition++;
-            }
+        LessonResponse lesson = sections.get(position);
+        holder.bindLesson(lesson);
     }
 
     @Override
@@ -78,23 +71,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
             this.binding = binding;
         }
 
-        void bindSection(Section section) {
-            binding.tvSectionTitle.setVisibility(View.VISIBLE);
-            binding.tvSectionDuration.setVisibility(View.VISIBLE);
-            binding.tvSectionTitle.setText(section.getTitle());
-            binding.tvSectionDuration.setText(section.getDuration());
-
-            // Hide lesson layout
-            itemView.findViewById(R.id.lessonLayout).setVisibility(View.GONE);
-        }
-
         void bindLesson(LessonResponse lesson) {
-            binding.tvSectionTitle.setVisibility(View.GONE);
-            binding.tvSectionDuration.setVisibility(View.GONE);
-
-            // Show lesson layout
-            itemView.findViewById(R.id.lessonLayout).setVisibility(View.VISIBLE);
-
             binding.tvLessonNumber.setText(String.valueOf(lesson.getLessonOrder()));
             binding.tvLessonTitle.setText(lesson.getLessonName());
             binding.tvLessonDuration.setText(String.valueOf(lesson.getDuration()));
@@ -111,7 +88,8 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
 
             // Set click listener
             itemView.setOnClickListener(v -> {
-                if (listener != null && !lesson.getStatus().equals("UNLOCKED")) {
+                if (listener != null && lesson.getStatus().equals("UNLOCKED")) {
+                    Log.d("LessonsAdapter", "Lesson clicked: " + lesson.getLessonName());
                     listener.onLessonClick(lesson);
                 }
             });

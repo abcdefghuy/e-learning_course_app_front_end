@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/blue" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Privacy Policy"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btnBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btnBack" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCancellationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancellation Policy"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCancellationContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="You may cancel your course enrollment and request a refund within 7 days of purchase if you have completed less than 25% of the course content. To request a cancellation:\n\n1. Go to 'My Courses' in your account\n2. Select the course you wish to cancel\n3. Click the 'Request Refund' button\n\nRefunds will be processed within 5-7 business days. After the 7-day period or if you've completed more than 25% of the course, refunds will be evaluated on a case-by-case basis."
+                android:textColor="@color/gray_600"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvTermsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Terms &amp; Conditions"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTermsContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:lineSpacingExtra="4dp"
+                android:text="1. Course Access\nPurchased courses are accessible for 12 months from the date of enrollment. You may download course materials for personal use only.\n\n2. Account Security\nYou are responsible for maintaining the security of your account credentials. Any sharing of accounts or course materials is strictly prohibited.\n\n3. Code of Conduct\nStudents must maintain respectful communication in course discussions and forums. Harassment, spam, or inappropriate content will result in account suspension.\n\n4. Content Usage\nAll course materials, including videos, documents, and assignments, are protected by copyright. Redistribution or commercial use is not permitted.\n\n5. Payment and Pricing\nCourse prices are subject to change. Once purchased at a specific price, you will not be affected by subsequent price changes.\n\n6. Certificate of Completion\nCertificates are issued only upon successful completion of all required course components with a minimum passing grade of 70%.\n\n7. Technical Requirements\nIt is your responsibility to ensure you have the necessary devices and internet connection to access course content. We recommend a stable internet connection of at least 5 Mbps.\n\n8. Updates and Changes\nWe reserve the right to update course content and these terms. Major changes will be communicated via email."
+                android:textColor="@color/gray_600"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout> 

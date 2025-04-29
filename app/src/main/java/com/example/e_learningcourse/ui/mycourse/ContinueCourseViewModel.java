@@ -29,7 +29,7 @@ public class ContinueCourseViewModel extends BaseViewModel {
     public void fetchCoursesInProgress() {
         courseRepository.getCourseContinueLatest().observeForever(response -> {
             if (response != null) {
-                _courseLatest.setValue(response);
+                _courseLatest.setValue(response.getData());
             }
         });
     }
@@ -38,9 +38,9 @@ public class ContinueCourseViewModel extends BaseViewModel {
         isLoading = true;
         courseRepository.getContinueCourse(currentPage, pageSize).observeForever(response -> {
             if (response != null) {
-                isLastPage = response.isLast();
+                isLastPage = response.getData().isLast();
                 currentPage++;
-                _courses.setValue(response);
+                _courses.setValue(response.getData());
             }
             isLoading = false;
         });
@@ -50,9 +50,9 @@ public class ContinueCourseViewModel extends BaseViewModel {
         isLoading = true;
         courseRepository.getCompletedCourse(currentPage, pageSize).observeForever(response -> {
             if (response != null) {
-                isLastPage = response.isLast();
+                isLastPage = response.getData().isLast();
                 currentPage++;
-                _courses.setValue(response);
+                _courses.setValue(response.getData());
             }
             isLoading = false;
         });

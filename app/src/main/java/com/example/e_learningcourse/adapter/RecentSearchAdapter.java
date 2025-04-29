@@ -21,6 +21,14 @@ public class RecentSearchAdapter extends RecyclerView.Adapter<RecentSearchAdapte
     public interface OnItemRemoveListener {
         void onItemRemove(int position);
     }
+    public interface OnItemClickListener {
+        void onItemClick(String keyword);
+    }
+    private OnItemClickListener itemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
 
     public RecentSearchAdapter() {
         this.searches = new ArrayList<>();
@@ -39,6 +47,7 @@ public class RecentSearchAdapter extends RecyclerView.Adapter<RecentSearchAdapte
         if (position >= 0 && position < searches.size()) {
             searches.remove(position);
             notifyItemRemoved(position);
+            notifyItemRangeChanged(position, searches.size());
         }
     }
 
@@ -76,6 +85,12 @@ public class RecentSearchAdapter extends RecyclerView.Adapter<RecentSearchAdapte
             btnRemove.setOnClickListener(v -> {
                 if (removeListener != null) {
                     removeListener.onItemRemove(position);
+                }
+            });
+            //search lai ket qua cu
+            itemView.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(search);
                 }
             });
         }

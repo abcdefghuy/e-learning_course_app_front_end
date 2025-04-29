@@ -19,4 +19,16 @@ public class ApiUtils {
             return new ApiResponse<>(false, 5000, "Unknown error", null);
         }
     }
+    public static <T> ApiResponse<T> parseErrorResponse(Response<?> response, Type type) {
+        try {
+            if (response.errorBody() != null) {
+                String json = response.errorBody().string();
+                Gson gson = new Gson();
+                return gson.fromJson(json, type);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ApiResponse<>(false, response.code(), "Unknown error", null);
+    }
 }

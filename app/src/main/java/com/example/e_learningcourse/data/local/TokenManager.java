@@ -12,6 +12,7 @@ import java.security.GeneralSecurityException;
 public class TokenManager {
     private static final String PREF_NAME = "secure_prefs";
     private static final String KEY_TOKEN = "auth_token";
+    private static final String EXPIRED_IN = "expired_in";
 
     private static TokenManager instance;
     private SharedPreferences sharedPreferences;
@@ -43,6 +44,18 @@ public class TokenManager {
 
     public void saveToken(String token) {
         sharedPreferences.edit().putString(KEY_TOKEN, token).apply();
+    }
+    public void saveExpiredToken(String expiredIn) {
+        sharedPreferences.edit().putString(EXPIRED_IN,expiredIn).apply();
+    }
+    public boolean isTokenExpired() {
+        String expiredIn = sharedPreferences.getString(EXPIRED_IN, null);
+        if (expiredIn != null) {
+            long currentTime = System.currentTimeMillis();
+            long expirationTime = Long.parseLong(expiredIn);
+            return currentTime > expirationTime;
+        }
+        return true; // If no expiration time is set, consider the token expired
     }
 
     public String getToken() {

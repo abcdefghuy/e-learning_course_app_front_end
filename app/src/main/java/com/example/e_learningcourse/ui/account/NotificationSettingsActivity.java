@@ -1,4 +1,4 @@
-package com.example.e_learningcourse.ui;
+package com.example.e_learningcourse.ui.account;
 
 import android.os.Bundle;
 import android.widget.ImageButton;

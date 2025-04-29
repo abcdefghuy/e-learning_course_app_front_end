@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.api;
 
+import com.example.e_learningcourse.model.response.ApiResponse;
 import com.example.e_learningcourse.model.response.ContinueCourseResponse;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.example.e_learningcourse.model.response.CourseResponse;
@@ -13,19 +14,21 @@ import retrofit2.http.Query;
 
 public interface CourseAPI {
     @GET("api/courses/top-selling")
-    Call<PaginateResponse<CourseResponse>> getTopCourseSelling();
+    Call<ApiResponse<PaginateResponse<CourseResponse>>> getTopCourseSelling();
     @GET("api/courses/all-courses")
-    Call<PaginateResponse<CourseResponse>> getAllCourse(@Query("page") int page, @Query("size") int limit);
+    Call<ApiResponse<PaginateResponse<CourseResponse>>> getAllCourse(@Query("page") int page, @Query("size") int limit);
 
     @GET("api/courses/{courseId}")
-    Call<CourseDetailResponse> getCourseDetails(@Path("courseId") Long courseId);
+    Call<ApiResponse<CourseDetailResponse>> getCourseDetails(@Path("courseId") Long courseId);
     @GET("api/courses/search")
-    Call<PaginateResponse<CourseResponse>> searchCourse(@Query("keyword") String keyword, @Query("page") int page, @Query("size") int limit);
+    Call<ApiResponse<PaginateResponse<CourseResponse>>> searchCourse(@Query("keyword") String keyword, @Query("page") int page, @Query("size") int limit);
 
     @GET("api/courses/continue")
-    Call<PaginateResponse<ContinueCourseResponse>> getContinueCourse(@Query("page") int page, @Query("size") int limit);
+    Call<ApiResponse<PaginateResponse<ContinueCourseResponse>>> getContinueCourse(@Query("page") int page, @Query("size") int limit);
     @GET("api/courses/continue/latest")
-    Call<ContinueCourseResponse> getContinueCourseLatest();
+    Call<ApiResponse<ContinueCourseResponse>> getContinueCourseLatest();
     @GET("api/courses/completed")
-    Call<PaginateResponse<ContinueCourseResponse>> getCompletedCourse(@Query("page") int page, @Query("size") int limit);
+    Call<ApiResponse<PaginateResponse<ContinueCourseResponse>>> getCompletedCourse(@Query("page") int page, @Query("size") int limit);
+    @GET("api/courses/{categoryName}/courses")
+    Call<ApiResponse<PaginateResponse<CourseResponse>>> getCoursesByCategory(@Path("categoryName") String categoryName, @Query("page") int page, @Query("size") int limit);
 }

@@ -99,7 +99,7 @@ public class ContinueLearningAdapter extends RecyclerView.Adapter<ContinueLearni
                     .load(course.getCourseImageUrl())
                     //.placeholder(R.drawable.ic_placeholder)
                     .into(courseImage);
-            courseCategory.setText("Design"); // You can make this dynamic if needed
+            courseCategory.setText(course.getCategoryName()); // You can make this dynamic if needed
             courseTitle.setText(course.getCourseTitle());
             instructorName.setText("Huy");
             
@@ -110,12 +110,7 @@ public class ContinueLearningAdapter extends RecyclerView.Adapter<ContinueLearni
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), CoursesActivity.class);
-                intent.putExtra("coursedId", course.getCourseId());
-//                intent.putExtra("course_title", course.getTitle());
-//                intent.putExtra("course_instructor", course.getInstructor());
-//                intent.putExtra("course_thumbnail", course.getThumbnailResId());
-//                intent.putExtra("course_rating", course.getRating());
-//                intent.putExtra("course_price", course.getPrice());
+                intent.putExtra("courseId", course.getCourseId());
                 v.getContext().startActivity(intent);
             });
         }

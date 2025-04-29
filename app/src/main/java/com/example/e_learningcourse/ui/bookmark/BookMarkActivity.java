@@ -4,13 +4,16 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,16 +30,22 @@ import java.util.List;
 public class BookMarkActivity extends AppCompatActivity implements CourseAdapter.OnBookmarkClickListener {
     private CourseAdapter adapter;
     private List<CourseResponse> bookmarkedCourses;
+    private RecyclerView recyclerView;
+    private BookmarkViewModel bookmarkViewModel;
+
+    private boolean isLoading = false;
+    private boolean hasMoreData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
+        bookmarkViewModel = new  ViewModelProvider(this).get(BookmarkViewModel.class);
         // Set up back button
         ImageButton backButton = findViewById(R.id.btnBack);
         backButton.setOnClickListener(v -> finish());
         // Set up RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.rvBookmarkedCourses);
+        recyclerView = findViewById(R.id.rvBookmarkedCourses);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         // Initialize bookmarked courses
         initializeBookmarkedCourses();
@@ -45,15 +54,54 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
         adapter.setCourses(bookmarkedCourses);
         adapter.setOnBookmarkClickListener(this);
         recyclerView.setAdapter(adapter);
+
+        // Show shimmer loading
+        adapter.showShimmer(true);
+        // Observe LiveData only ONCE here
+        bookmarkViewModel.getCourses().observe(this, response -> {
+            if (response != null) {
+                if (isLoading) {
+                    // Hide shimmer loading
+                    adapter.showShimmer(false);
+                    if (adapter.getItemCount() == 0) {
+                        adapter.setCourses(response.getData().getContent()); // Initial load
+                    } else {
+                        adapter.addCourses(response.getData().getContent()); // Load more
+                    }
+                    hasMoreData = !response.getData().isLast(); // Use isLast from response
+                    isLoading = false;
+                }
+            }
+        });
+
+        // Add scroll listener for pagination
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    int totalItemCount = layoutManager.getItemCount();
+                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                    // Check if we need to load more items
+                    if (!isLoading && hasMoreData && lastVisibleItemPosition + 2 >= totalItemCount) {
+                        loadMoreBookmark();
+                    }
+                }
+            }
+        });
+        // Initialize bookmarked courses
+        initializeBookmarkedCourses();
+    }
+    private void loadMoreBookmark() {
+        if (isLoading || !hasMoreData) return;
+        isLoading = true;
+        bookmarkViewModel.fetchBookmark(); // Load next page
     }
 
     private void initializeBookmarkedCourses() {
-        bookmarkedCourses = new ArrayList<>();
-//        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
-//        bookmarkedCourses.add(new CourseDetailResponse("Logo Design Basics", "Eleanor Pena", 120.00, R.drawable.ic_business, true));
-//        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Kathryn Murphy", 160.00, R.drawable.ic_business, true));
-//        bookmarkedCourses.add(new CourseDetailResponse("User-Centered Design", "Marvin McKinney", 200.00, R.drawable.ic_business, true));
-//        bookmarkedCourses.add(new CourseDetailResponse("Introduction of Figma", "Jacob Jones", 180.00, R.drawable.ic_business, true));
+        isLoading = true;
+        bookmarkViewModel.fetchBookmark(); // Start with first page
     }
 
     @Override
@@ -99,26 +147,20 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
         if (btnCancel != null) {
             btnCancel.setOnClickListener(v -> dialog.dismiss());
         }
-
         if (btnRemove != null) {
             btnRemove.setOnClickListener(v -> {
                 // Remove the course from bookmarks
-                course.setBookmarked(false);
+                bookmarkViewModel.toggleBookmark(course.getCourseId(), false);
                 bookmarkedCourses.remove(position);
                 adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeChanged(position, bookmarkedCourses.size());
-
                 // Show feedback
                 Toast.makeText(BookMarkActivity.this, R.string.bookmark_removed, Toast.LENGTH_SHORT).show();
-
                 // Dismiss dialog
                 dialog.dismiss();
-
                 // Update empty state if needed
                 updateEmptyState();
             });
         }
-
         dialog.show();
     }
 
@@ -128,7 +170,6 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
 //        if (emptyState != null) {
 //            emptyState.setVisibility(bookmarkedCourses.isEmpty() ? View.VISIBLE : View.GONE);
 //        }
-
         // Find the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.rvBookmarkedCourses);
         if (recyclerView != null) {

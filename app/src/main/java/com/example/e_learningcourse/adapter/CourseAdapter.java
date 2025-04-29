@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,6 +28,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private List<CourseResponse> courses;
     private OnBookmarkClickListener bookmarkClickListener;
+    private OnItemSaveClickListener itemSaveClickListener;
     private Context context;
     private boolean showShimmer = false;
 
@@ -34,9 +36,14 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.context = context;
         this.courses = new ArrayList<>();
     }
-
+    public interface OnItemSaveClickListener {
+        void onItemSaveClick(CourseResponse course);
+    }
     public interface OnBookmarkClickListener {
         void onBookmarkClick(CourseResponse course, int position);
+    }
+    public void setOnItemSaveClickListener(OnItemSaveClickListener listener) {
+        this.itemSaveClickListener = listener;
     }
 
     public void setOnBookmarkClickListener(OnBookmarkClickListener listener) {
@@ -131,10 +138,16 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     bookmarkClickListener.onBookmarkClick(course, position);
                 }
             });
-
             itemView.setOnClickListener(v -> {
+                // Chuyển đến CourseDetailsActivity khi người dùng nhấp vào mục
                 Intent intent = new Intent(v.getContext(), CourseDetailsActivity.class);
+                intent.putExtra("courseId", course.getCourseId());
                 v.getContext().startActivity(intent);
+
+                // Nếu bạn cũng muốn thực hiện hành động lưu mục, bạn có thể gọi ở đây
+                if (itemSaveClickListener != null) {
+                    itemSaveClickListener.onItemSaveClick(course);
+                }
             });
         }
     }

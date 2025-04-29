@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.e_learningcourse.model.response.ApiResponse;
 import com.example.e_learningcourse.utils.ApiUtils;
 
+import java.lang.reflect.Type;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,4 +29,22 @@ public abstract class BaseRepository {
             }
         });
     }
+    protected <T> void enqueue(Call<ApiResponse<T>> call, MutableLiveData<ApiResponse<T>> liveData, Type type) {
+        call.enqueue(new Callback<ApiResponse<T>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<T>> call, Response<ApiResponse<T>> response) {
+                if (response.isSuccessful() && response.body() !=null) {
+                    liveData.setValue(response.body());
+                } else {
+                    liveData.setValue(ApiUtils.parseErrorResponse(response, type));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<T>> call, Throwable t) {
+                liveData.setValue(new ApiResponse<>(false, 500, "Lỗi mạng: " + t.getMessage(), null));
+            }
+        });
+    }
+
 }
