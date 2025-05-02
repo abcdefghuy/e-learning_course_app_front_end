@@ -58,8 +58,8 @@ public class CourseViewModel extends BaseViewModel {
             }
         });
     }
-    public void fetchCourseDetails(Long courseId) {
-        repository.getCourseDetails(courseId).observeForever(response -> {
+    public void fetchCourseDetails(Long courseId, Long userId) {
+        repository.getCourseDetails(courseId, userId).observeForever(response -> {
             if (response != null) {
                 _courseDetails.setValue(response.getData());
             }

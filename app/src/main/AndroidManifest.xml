@@ -83,6 +83,19 @@
         <meta-data
             android:name="CLOUDINARY_URL"
             android:value="cloudinary://487394153664677:qV8HWNChkFSIGAMwUMqkjY0lZhQ@dnoyhgqbs"/>
+        <activity android:name=".ui.payment.PaymentActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="myapp"
+                    android:host="payment-result" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.ResultScreenActivity" />
     </application>
 
 </manifest>

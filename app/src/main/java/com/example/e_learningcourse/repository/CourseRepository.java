@@ -38,9 +38,9 @@ public class CourseRepository extends BaseRepository {
         return coursesLiveData;
     }
 
-    public LiveData<ApiResponse<CourseDetailResponse>> getCourseDetails(Long courseId) {
+    public LiveData<ApiResponse<CourseDetailResponse>> getCourseDetails(Long courseId, Long userId) {
         MutableLiveData<ApiResponse<CourseDetailResponse>> courseDetailsLiveData = new MutableLiveData<>();
-        enqueue(api.getCourseDetails(courseId), courseDetailsLiveData, CourseDetailResponse.class);
+        enqueue(api.getCourseDetails(courseId, userId), courseDetailsLiveData, CourseDetailResponse.class);
         return courseDetailsLiveData;
     }
     public LiveData<ApiResponse<ContinueCourseResponse>> getCourseContinueLatest() {

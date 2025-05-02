@@ -19,7 +19,7 @@ public interface CourseAPI {
     Call<ApiResponse<PaginateResponse<CourseResponse>>> getAllCourse(@Query("page") int page, @Query("size") int limit);
 
     @GET("api/courses/{courseId}")
-    Call<ApiResponse<CourseDetailResponse>> getCourseDetails(@Path("courseId") Long courseId);
+    Call<ApiResponse<CourseDetailResponse>> getCourseDetails(@Path("courseId") Long courseId, @Query("userId") Long userId);
     @GET("api/courses/search")
     Call<ApiResponse<PaginateResponse<CourseResponse>>> searchCourse(@Query("keyword") String keyword, @Query("page") int page, @Query("size") int limit);
 
