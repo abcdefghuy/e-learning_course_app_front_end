@@ -1,5 +1,7 @@
 package com.example.e_learningcourse.model.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
@@ -21,8 +23,10 @@ public class CourseDetailResponse {
     private List<String> categoryNames;
     private boolean isBestSeller;
     private boolean isBookmarked;
+    @SerializedName("enrolled")
+    private boolean isEnrolled;
 
-    public CourseDetailResponse(Long courseId, String courseName, boolean enabled, Double coursePrice, String courseImg, String courseDescription, Integer duration, Date createdAt, Date updateAt, String level, Double rating, int lessonCount, int reviewCount, Integer studentQuantity, List<String> categoryNames, boolean isBestSeller, boolean isBookmarked) {
+    public CourseDetailResponse(Long courseId, String courseName, boolean enabled, Double coursePrice, String courseImg, String courseDescription, Integer duration, Date createdAt, Date updateAt, String level, Double rating, int lessonCount, int reviewCount, Integer studentQuantity, List<String> categoryNames, boolean isBestSeller, boolean isBookmarked, boolean isEnrolled) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.enabled = enabled;
@@ -40,6 +44,7 @@ public class CourseDetailResponse {
         this.categoryNames = categoryNames;
         this.isBestSeller = isBestSeller;
         this.isBookmarked = isBookmarked;
+        this.isEnrolled = isEnrolled;
     }
     public CourseDetailResponse() {
     }
@@ -178,5 +183,13 @@ public class CourseDetailResponse {
 
     public void setBookmarked(boolean bookmarked) {
         isBookmarked = bookmarked;
+    }
+
+    public boolean isEnrolled() {
+        return isEnrolled;
+    }
+
+    public void setEnrolled(boolean enrolled) {
+        this.isEnrolled = enrolled;
     }
 }

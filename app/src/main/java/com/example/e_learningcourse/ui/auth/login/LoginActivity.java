@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.e_learningcourse.MainActivity;
+import com.example.e_learningcourse.data.local.UserManager;
 import com.example.e_learningcourse.databinding.ActivityLoginBinding;
 import com.example.e_learningcourse.ui.auth.forgotPassword.ForgotPasswordActivity;
 import com.example.e_learningcourse.ui.auth.register.RegisterActivity;
@@ -44,8 +45,18 @@ public class LoginActivity extends BaseActivity<ActivityLoginBinding, LoginViewM
 
         viewModel.getLoginResponse().observe(this, response -> {
             if (response != null && response.getData() != null) {
-                startActivity(new Intent(this, MainActivity.class));
-                finish();
+                viewModel.fetchUserInfo().observe(this, userResponse -> {
+                    if (userResponse != null && userResponse.getData() != null) {
+                        long userId = userResponse.getData().getId();
+                        String email = userResponse.getData().getEmail();
+                        String fullName = userResponse.getData().getFullName();
+
+                        UserManager.getInstance(this).saveUser(userId, email, fullName);
+
+                        startActivity(new Intent(this, MainActivity.class));
+                        finish();
+                    }
+                });
             }
         });
 

@@ -17,6 +17,7 @@ public class TokenManager {
     private static TokenManager instance;
     private SharedPreferences sharedPreferences;
 
+
     private TokenManager(Context context) throws GeneralSecurityException, IOException {
         MasterKey masterKey = new MasterKey.Builder(context)
                 .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)

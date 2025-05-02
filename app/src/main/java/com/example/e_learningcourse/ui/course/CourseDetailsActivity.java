@@ -1,17 +1,26 @@
 package com.example.e_learningcourse.ui.course;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.e_learningcourse.R;
+import com.example.e_learningcourse.data.local.UserManager;
 import com.example.e_learningcourse.databinding.ActivityCourseDetailsBinding;
+import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.example.e_learningcourse.ui.lesson.LessonsFragment;
+import com.example.e_learningcourse.ui.payment.PaymentActivity;
 import com.example.e_learningcourse.ui.review.ReviewsFragment;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
 
 public class CourseDetailsActivity extends AppCompatActivity {
     private ActivityCourseDetailsBinding binding;
@@ -26,6 +35,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         binding = ActivityCourseDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         courseId = getIntent().getLongExtra("courseId", -1);
+        long userId = UserManager.getInstance(this).getUserId();
         Log.d("Course ID", "detail nhan: " + courseId); // ✅ đúng cú pháp
         if (courseId == -1) {
             // Handle error: courseId not found
@@ -38,18 +48,19 @@ public class CourseDetailsActivity extends AppCompatActivity {
         setupToolbar();
         setupTabs();
         setupClickListeners();
-        loadCourseDetails(courseId);
+        loadCourseDetails(courseId, userId);
         // Show About fragment by default
         if (savedInstanceState == null) {
             showFragment(new AboutCourseFragment(), courseId);
         }
-        loadCourseDetails(courseId);
+        loadCourseDetails(courseId, userId);
     }
 
-    private void loadCourseDetails(Long courseId) {
-        courseViewModel.fetchCourseDetails(courseId);
+    private void loadCourseDetails(Long courseId, Long userId) {
+        courseViewModel.fetchCourseDetails(courseId, userId);
         courseViewModel.getCourseDetails().observe(this, courseDetailResponse -> {
             if (courseDetailResponse != null) {
+                Log.d("EnrollmentStatus", "isEnrolled = " + courseDetailResponse.isEnrolled());
                 binding.tvCourseTitle.setText(courseDetailResponse.getCourseName());
                 binding.tvInstructorName.setText("huy");
                 binding.tvRating.setText(String.valueOf(courseDetailResponse.getRating()));
@@ -63,6 +74,12 @@ public class CourseDetailsActivity extends AppCompatActivity {
                         isBookmarked ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark
                 );
                 sharedViewModel.setCourseDetail(courseDetailResponse);
+
+                if (courseDetailResponse.isEnrolled()) {
+                    binding.btnEnroll.setVisibility(View.GONE);
+                } else {
+                    binding.btnEnroll.setVisibility(View.VISIBLE);
+                }
             } else {
                 // Handle error
             }
@@ -114,8 +131,24 @@ public class CourseDetailsActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         binding.btnEnroll.setOnClickListener(v -> {
-            // Implement enrollment
+            CourseDetailResponse course = sharedViewModel.getCourseDetail().getValue();
+
+            if (course != null) {
+                Intent intent = new Intent(this, PaymentActivity.class);
+                long currentUserId = UserManager.getInstance(this).getUserId();
+                intent.putExtra("userId", currentUserId);
+                intent.putExtra("courseId", course.getCourseId());
+                intent.putExtra("amount", course.getCoursePrice());
+                intent.putExtra("title", course.getCourseName());
+                intent.putExtra("category", TextUtils.join(", ", course.getCategoryNames()));
+                intent.putExtra("imageUrl", course.getCourseImg());
+
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Course info not available", Toast.LENGTH_SHORT).show();
+            }
         });
+
     }
 
     private void showFragment(Fragment fragment, Long courseId) {
