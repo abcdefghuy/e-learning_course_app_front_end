@@ -26,7 +26,7 @@ import com.example.e_learningcourse.adapter.ContinueLearningAdapter;
 import com.example.e_learningcourse.adapter.MentorAdapter;
 import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
 import com.example.e_learningcourse.databinding.FragmentHomeBinding;
-import com.example.e_learningcourse.model.Mentor;
+import com.example.e_learningcourse.model.response.MentorResponse;
 import com.example.e_learningcourse.model.response.ContinueCourseResponse;
 import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.account.UserViewModel;
@@ -36,6 +36,8 @@ import com.example.e_learningcourse.ui.category.CategoryActivity;
 import com.example.e_learningcourse.ui.category.CategoryViewModel;
 import com.example.e_learningcourse.ui.course.CourseViewModel;
 import com.example.e_learningcourse.ui.course.PopularCoursesActivity;
+import com.example.e_learningcourse.ui.mentor.MentorActivity;
+import com.example.e_learningcourse.ui.mentor.MentorViewModel;
 import com.example.e_learningcourse.ui.mycourse.ContinueCourseViewModel;
 import com.example.e_learningcourse.ui.mycourse.ContinueLearningActivity;
 
@@ -57,10 +59,11 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
     private ContinueCourseViewModel continueCourseViewModel;
     private BookmarkViewModel bookmarkViewModel;
     private UserViewModel userViewModel;
-    
+    private MentorViewModel mentorViewModel;
+
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    
+
     private final ActivityResultLauncher<Intent> popularCoursesLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -76,7 +79,6 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -86,13 +88,13 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         setupSectionTitles();
         loadSampleData();
     }
-
     private void initializeViewModels() {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         continueCourseViewModel = new ViewModelProvider(this).get(ContinueCourseViewModel.class);
         bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        mentorViewModel = new ViewModelProvider(this).get(MentorViewModel.class);
     }
 
     private void setupRecyclerViews() {
@@ -108,17 +110,18 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         binding.rvMentors.setAdapter(mentorAdapter);
         binding.rvContinueLearning.setAdapter(continueLearningAdapter);
     }
-
     private void setupClickListeners() {
-        binding.ibBookmark.setOnClickListener(v -> navigateToBookmark());
+        binding.ibBookmark.setOnClickListener(v -> navigateTo(BookMarkActivity.class));
         
         View categorySection = binding.getRoot().findViewById(R.id.categoriesSection);
         View popularCoursesSection = binding.getRoot().findViewById(R.id.popularCoursesSection);
         View continueLearningSection = binding.getRoot().findViewById(R.id.continueLearningSection);
+        View mentorSection = binding.getRoot().findViewById(R.id.topMentorSection);
 
-        categorySection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateToCategory());
-        popularCoursesSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateToPopularCourses());
-        continueLearningSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateToContinueLearning());
+        categorySection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(CategoryActivity.class));
+        popularCoursesSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(PopularCoursesActivity.class));
+        continueLearningSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(ContinueLearningActivity.class));
+        mentorSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(MentorActivity.class));
     }
 
     private void setupSectionTitles() {
@@ -141,13 +144,15 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         loadMentors();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void loadMentors() {
-        mentorAdapter.setMentors(Arrays.asList(
-                new Mentor(1, "David Wilson", R.drawable.avatar),
-                new Mentor(2, "Emma Brown", R.drawable.avatar),
-                new Mentor(3, "Michael Lee", R.drawable.avatar),
-                new Mentor(4, "Lisa Chen", R.drawable.avatar)
-        ));
+        mentorViewModel.fetchTopMentors();
+        mentorViewModel.getMentors().observe(getViewLifecycleOwner(), response -> {
+            if (response != null) {
+                mentorAdapter.setMentors(response.getContent());
+                mentorAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -219,22 +224,8 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
             }
         });
     }
-
-    // Navigation methods
-    private void navigateToBookmark() {
-        startActivity(new Intent(requireContext(), BookMarkActivity.class));
-    }
-
-    private void navigateToCategory() {
-        startActivity(new Intent(requireContext(), CategoryActivity.class));
-    }
-
-    private void navigateToPopularCourses() {
-        popularCoursesLauncher.launch(new Intent(requireContext(), PopularCoursesActivity.class));
-    }
-
-    private void navigateToContinueLearning() {
-        startActivity(new Intent(requireContext(), ContinueLearningActivity.class));
+    private void navigateTo(Class<?> activityClass) {
+        startActivity(new Intent(requireContext(), activityClass));
     }
 }
 

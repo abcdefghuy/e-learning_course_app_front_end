@@ -33,7 +33,7 @@ public class LessonViewModel extends BaseViewModel {
         if (isLoading || isLastPage) return;
         isLoading = true;
         lessonRepository.getLessonByCourse(courseId,currentPage, pageSize).observeForever(response -> {
-            if (response != null) {
+            if (response != null && response.isSuccess()) {
                 isLastPage = response.getData().isLast();
                 currentPage++;
                 _lessons.setValue(response.getData());
@@ -43,7 +43,7 @@ public class LessonViewModel extends BaseViewModel {
     }
     public void updateLessonProgress(Long lessonId) {
         lessonRepository.updateLessonProgress(lessonId).observeForever(response -> {
-            if (response != null) {
+            if (response != null && response.isSuccess()) {
                 _lessonUpdateResult.postValue(true); // Thành công
             } else {
                 _lessonUpdateResult.postValue(false); // Thất bại

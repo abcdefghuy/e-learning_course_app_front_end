@@ -29,8 +29,8 @@ public class LessonRepository extends BaseRepository {
         enqueue(lessonAPI.getLessonByCourse(courseId, page, size), coursesLiveData, new TypeToken<ApiResponse<PaginateResponse<LessonResponse>>>() {}.getType());
         return coursesLiveData;
     }
-    public LiveData<ApiResponse<LessonResponse>> updateLessonProgress(Long lessonId) {
-        MutableLiveData<ApiResponse<LessonResponse>> lessonLiveData = new MutableLiveData<>();
+    public LiveData<ApiResponse<Void>> updateLessonProgress(Long lessonId) {
+        MutableLiveData<ApiResponse<Void>> lessonLiveData = new MutableLiveData<>();
         enqueue(lessonAPI.updateLessonProgress(lessonId), lessonLiveData, Void.class);
         return lessonLiveData;
     }

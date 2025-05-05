@@ -6,18 +6,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ItemMentorBinding;
-import com.example.e_learningcourse.model.Mentor;
+import com.example.e_learningcourse.model.response.MentorResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.MentorViewHolder> {
 
-    private List<Mentor> mentors = new ArrayList<>();
+    private List<MentorResponse> mentorResponses = new ArrayList<>();
 
-    public void setMentors(List<Mentor> mentors) {
-        this.mentors = mentors;
+    public void setMentors(List<MentorResponse> mentorResponses) {
+        this.mentorResponses = mentorResponses;
         notifyDataSetChanged();
     }
 
@@ -34,12 +36,12 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.MentorView
 
     @Override
     public void onBindViewHolder(@NonNull MentorViewHolder holder, int position) {
-        holder.bind(mentors.get(position));
+        holder.bind(mentorResponses.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mentors.size();
+        return mentorResponses.size();
     }
 
     static class MentorViewHolder extends RecyclerView.ViewHolder {
@@ -50,9 +52,12 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.MentorView
             this.binding = binding;
         }
 
-        void bind(Mentor mentor) {
-            binding.ivMentorAvatar.setImageResource(mentor.getAvatarResId());
-            binding.tvMentorName.setText(mentor.getName());
+        void bind(MentorResponse mentorResponse) {
+            Glide.with(binding.getRoot().getContext())
+                .load(mentorResponse.getMentorAvatar())
+                .placeholder(R.drawable.avatar)
+                .into(binding.ivMentorAvatar);
+            binding.tvMentorName.setText(mentorResponse.getMentorName());
         }
     }
 } 

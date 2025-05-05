@@ -9,6 +9,24 @@ public class CourseResponse {
     private boolean bookmarked;
     private Double rating;
     private boolean bestSeller;
+    private String mentorName;
+    private String mentorAvatar;
+
+    public String getMentorName() {
+        return mentorName;
+    }
+
+    public void setMentorName(String mentorName) {
+        this.mentorName = mentorName;
+    }
+
+    public String getMentorAvatar() {
+        return mentorAvatar;
+    }
+
+    public void setMentorAvatar(String mentorAvatar) {
+        this.mentorAvatar = mentorAvatar;
+    }
 
     public boolean isBestSeller() {
         return bestSeller;

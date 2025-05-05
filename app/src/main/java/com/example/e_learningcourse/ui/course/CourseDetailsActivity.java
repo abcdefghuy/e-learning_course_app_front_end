@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.ui.course;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -56,6 +57,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         loadCourseDetails(courseId, userId);
     }
 
+    @SuppressLint("SetTextI18n")
     private void loadCourseDetails(Long courseId, Long userId) {
         courseViewModel.fetchCourseDetails(courseId, userId);
         courseViewModel.getCourseDetails().observe(this, courseDetailResponse -> {
@@ -67,8 +69,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 binding.ivInstructorAvatar.setImageResource(R.drawable.avatar);
                 binding.tvTotalPrice.setText(String.valueOf(courseDetailResponse.getCoursePrice()));
                 binding.tvRating.setText(String.valueOf(courseDetailResponse.getRating()));
-                binding.tvLessonsCount.setText(String.valueOf(courseDetailResponse.getLessonCount()));
-                binding.tvReviewCount.setText(String.valueOf(courseDetailResponse.getReviewCount()));
+                binding.tvLessonsCount.setText(String.valueOf(courseDetailResponse.getLessonCount()) + " lessons");
+                binding.tvReviewCount.setText(String.valueOf(courseDetailResponse.getReviewCount()) + " reviews");
                 isBookmarked = courseDetailResponse.isBookmarked();
                 binding.btnBookmark.setImageResource(
                         isBookmarked ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark

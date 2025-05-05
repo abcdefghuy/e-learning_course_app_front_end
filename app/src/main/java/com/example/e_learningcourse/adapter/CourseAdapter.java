@@ -116,7 +116,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void bind(CourseResponse course, int position) {
             binding.tvTitle.setText(course.getCourseName());
-            binding.tvInstructor.setText("huy");
+            binding.tvInstructor.setText(course.getMentorName());
             binding.tvPrice.setText(String.format(Locale.getDefault(), "$%.2f", course.getCoursePrice()));
             Glide.with(context)
                 .load(course.getCourseImg())
@@ -127,8 +127,10 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             } else {
                 binding.tvBestSeller.setVisibility(View.GONE);
             }
-            binding.ivInstructorAvatar.setImageResource(R.drawable.avatar);
-
+            Glide.with(context)
+                .load(course.getMentorAvatar())
+                //.placeholder(R.drawable.ic_placeholder)
+                .into(binding.ivInstructorAvatar);
             binding.btnBookmark.setImageResource(
                 course.isBookmarked() ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark_outline
             );
