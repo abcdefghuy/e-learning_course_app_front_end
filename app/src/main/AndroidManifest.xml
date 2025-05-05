@@ -80,6 +80,7 @@
         <activity android:name=".ui.mycourse.CoursesActivity"/>
         <activity android:name=".ui.search.SearchActivity" />
         <activity android:name=".ui.lesson.LessonPlayerActivity" />
+        <activity android:name=".ui.mentor.MentorActivity" />
         <meta-data
             android:name="CLOUDINARY_URL"
             android:value="cloudinary://487394153664677:qV8HWNChkFSIGAMwUMqkjY0lZhQ@dnoyhgqbs"/>
@@ -89,7 +90,6 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:scheme="myapp"
                     android:host="payment-result" />

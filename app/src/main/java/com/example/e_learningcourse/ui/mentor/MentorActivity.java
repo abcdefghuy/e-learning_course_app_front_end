@@ -1,29 +1,34 @@
-package com.example.e_learningcourse.ui.category;
+package com.example.e_learningcourse.ui.mentor;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.e_learningcourse.adapter.CategoryAdapter;
+import com.example.e_learningcourse.adapter.MentorAdapter;
 import com.example.e_learningcourse.databinding.ActivityCategoryBinding;
+import com.example.e_learningcourse.databinding.ActivityMentorBinding;
+import com.example.e_learningcourse.ui.category.CategoryActivity;
+import com.example.e_learningcourse.ui.category.CategoryViewModel;
 import com.example.e_learningcourse.ui.search.SearchActivity;
 
-public class CategoryActivity extends AppCompatActivity {
-    private ActivityCategoryBinding binding;
-    private CategoryAdapter adapter;
-    private CategoryViewModel categoryViewModel;
+public class MentorActivity extends AppCompatActivity {
+    private ActivityMentorBinding binding;
+    private MentorAdapter adapter;
+    private MentorViewModel mentorViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityCategoryBinding.inflate(getLayoutInflater());
+        binding = ActivityMentorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setupToolbar();
         setupRecyclerView();
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        mentorViewModel = new ViewModelProvider(this).get(MentorViewModel.class);
         loadCategories();
     }
 
@@ -32,24 +37,19 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        adapter = new CategoryAdapter();
+        adapter = new MentorAdapter();
         // Create a GridLayoutManager with 4 columns
         GridLayoutManager layoutManager = new GridLayoutManager(this, 4);
-        binding.rvCategories.setLayoutManager(layoutManager);
-        binding.rvCategories.setAdapter(adapter);
-        adapter.setOnCategoryClickListener(category -> {
-            Intent intent = new Intent(CategoryActivity.this, SearchActivity.class);
-            intent.putExtra("CATEGORY_NAME", category.getCategoryName()); // Truyền tên danh mục vào intent
-            startActivity(intent);
-        });
+        binding.rvMentors.setLayoutManager(layoutManager);
+        binding.rvMentors.setAdapter(adapter);
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void loadCategories() {
-        categoryViewModel.fetchCategories();
-        categoryViewModel.getCategories().observe(this, categories -> {
-            adapter.setCategories(categories);
+       mentorViewModel.fetchMentors();
+        mentorViewModel.getMentors().observe(this, mentors -> {
+            adapter.setMentors(mentors.getContent());
             adapter.notifyDataSetChanged();
         });
     }
-} 
+}

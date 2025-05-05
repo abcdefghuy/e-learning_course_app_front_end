@@ -34,6 +34,8 @@ public class LessonPlayerActivity extends AppCompatActivity {
     private LessonResponse currentLesson;
     private List<LessonResponse> nextLessons;
     private YouTubePlayerView youTubePlayerView;
+    private YouTubePlayer currentPlayer;
+
     private float videoDuration = 0;
     private boolean lessonMarked = false;
     private LessonViewModel lessonViewModel;
@@ -56,7 +58,7 @@ public class LessonPlayerActivity extends AppCompatActivity {
         }
 
         setupUI();
-        initializeYouTubePlayer(currentLesson);
+        initializeYouTubePlayer();
     }
 
     private void setupUI() {
@@ -77,8 +79,8 @@ public class LessonPlayerActivity extends AppCompatActivity {
             LessonsAdapter lessonsAdapter = new LessonsAdapter();
             lessonsAdapter.setOnLessonClickListener(lesson -> {
                 currentLesson = lesson;
-                setupUI();
-                initializeYouTubePlayer(currentLesson);
+                updateLessonUI();
+                loadNewLesson(lesson);
             });
             lessonsAdapter.setLesson(nextLessons);
             binding.rvLessons.setAdapter(lessonsAdapter);
@@ -87,23 +89,31 @@ public class LessonPlayerActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeYouTubePlayer(LessonResponse lesson) {
+    private void updateLessonUI() {
+        binding.tvLessonTitle.setText(currentLesson.getLessonName());
+        binding.tvLessonDuration.setText(String.valueOf(currentLesson.getDuration()));
+    }
+
+    private void initializeYouTubePlayer() {
         youTubePlayerView = binding.youtubePlayerView;
         youTubePlayerView.setEnableAutomaticInitialization(false);
         getLifecycle().addObserver(youTubePlayerView);
+
         View customPlayerUi = youTubePlayerView.inflateCustomPlayerUi(R.layout.custom_player_ui);
         YouTubePlayerListener listener = new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+                currentPlayer = youTubePlayer;
                 CustomPlayerUiController customPlayerUiController = new CustomPlayerUiController(customPlayerUi, youTubePlayer, youTubePlayerView);
                 youTubePlayer.addListener(customPlayerUiController);
-                YouTubePlayerUtils.loadOrCueVideo(youTubePlayer, getLifecycle(), extractVideoId(lesson.getLessonVideoUrl()), 0F);
+                loadNewLesson(currentLesson);
             }
 
             @Override
             public void onVideoDuration(@NonNull YouTubePlayer youTubePlayer, float duration) {
                 videoDuration = duration;
             }
+
             @Override
             public void onCurrentSecond(@NonNull YouTubePlayer youTubePlayer, float second) {
                 if (videoDuration > 0 && second >= videoDuration - 1 && !lessonMarked) {
@@ -115,10 +125,21 @@ public class LessonPlayerActivity extends AppCompatActivity {
         IFramePlayerOptions options = new IFramePlayerOptions.Builder().controls(0).build();
         youTubePlayerView.initialize(listener, options);
     }
+
+    private void loadNewLesson(LessonResponse lesson) {
+        lessonMarked = false;
+        if (currentPlayer != null) {
+            YouTubePlayerUtils.loadOrCueVideo(currentPlayer, getLifecycle(), extractVideoId(lesson.getLessonVideoUrl()), 0F);
+        }
+    }
+
     private void markLessonCompleted() {
+        lessonMarked = true;
+        lessonViewModel.updateLessonProgress(currentLesson.getLessonId());
         lessonViewModel.lessonUpdateResult.observe(LessonPlayerActivity.this, success -> {
             if (success != null && success) {
                 Toast.makeText(LessonPlayerActivity.this, "Bài học đã được đánh dấu hoàn thành!", Toast.LENGTH_SHORT).show();
+                refreshLessonList();
             }
         });
     }
@@ -129,5 +150,20 @@ public class LessonPlayerActivity extends AppCompatActivity {
         return parts[parts.length - 1];  // Return the last part as the video ID
     }
 
-
+    private void refreshLessonList() {
+        lessonViewModel.fetchLessonsByCourse(currentLesson.getCourseId());
+        lessonViewModel.getLessons().observe(LessonPlayerActivity.this, lessons -> {
+            if (lessons != null && !lessons.getContent().isEmpty()) {
+                // Cập nhật lại nextLessons
+                nextLessons = new ArrayList<>();
+                for (LessonResponse lesson : lessons.getContent()) {
+                    if (!lesson.getLessonId().equals(currentLesson.getLessonId())) {
+                        nextLessons.add(lesson);
+                    }
+                }
+                // Cập nhật RecyclerView
+                setupUI(); // gọi lại để cập nhật danh sách
+            }
+        });
+    }
 }

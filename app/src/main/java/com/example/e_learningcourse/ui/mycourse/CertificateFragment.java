@@ -13,6 +13,9 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,10 +116,12 @@ public class CertificateFragment extends Fragment {
         // Show loading state
         binding.btnDownload.setEnabled(false);
         binding.btnDownload.setText("Generating...");
+
         // Create a bitmap of the certificate view
         View certificateView = binding.certificateCard;
         certificateView.setDrawingCacheEnabled(true);
         certificateView.buildDrawingCache();
+
         Bitmap bitmap = Bitmap.createBitmap(
                 certificateView.getWidth(),
                 certificateView.getHeight(),
@@ -137,18 +142,19 @@ public class CertificateFragment extends Fragment {
         pdfCanvas.drawBitmap(bitmap, 0, 0, null);
         document.finishPage(page);
 
-        // Save PDF to file
+        // Save to external files directory (app-specific)
         String fileName = "Certificate_" + binding.tvStudentName.getText().toString().replace(" ", "_") + "_" +
                 new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date()) + ".pdf";
 
-        File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(downloadsDir, fileName);
+        File file = new File(requireContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
 
         try {
-            document.writeTo(new FileOutputStream(file));
+            FileOutputStream fos = new FileOutputStream(file);
+            document.writeTo(fos);
+            fos.close();
             document.close();
 
-            // Share the PDF file
+            // Share the PDF using FileProvider
             Uri uri = FileProvider.getUriForFile(
                     requireContext(),
                     requireContext().getApplicationContext().getPackageName() + ".provider",
@@ -171,7 +177,6 @@ public class CertificateFragment extends Fragment {
             binding.btnDownload.setText("Download Certificate");
         }
     }
-
     private void showReviewDialog() {
         reviewDialog = new Dialog(requireContext());
         reviewDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -240,13 +245,20 @@ public class CertificateFragment extends Fragment {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
+                        Log.d("ReviewDialog", "Animation ended, dismissing dialog.");
                         reviewDialog.dismiss();
                     }
-
                     @Override
                     public void onAnimationRepeat(Animation animation) {}
                 });
+
                 window.getDecorView().startAnimation(slideDown);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if (reviewDialog != null && reviewDialog.isShowing()) {
+                        Log.d("ReviewDialog", "Fallback dismiss after delay");
+                        reviewDialog.dismiss();
+                    }
+                }, 300); // 250ms duration + buffer
             } else {
                 reviewDialog.dismiss();
             }

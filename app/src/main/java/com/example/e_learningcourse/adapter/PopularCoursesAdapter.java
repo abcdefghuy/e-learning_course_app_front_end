@@ -118,7 +118,7 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public void bind(CourseResponse course, int position) {
             binding.tvCourseTitle.setText(course.getCourseName());
-            binding.tvInstructorName.setText("Huy");
+            binding.tvInstructorName.setText(course.getMentorName());
             binding.tvRating.setText(String.format(Locale.getDefault(), "%.1f", course.getRating()));
 
             Log.d("PopularCoursesAdapter", "Binding course: " + course.getCourseName());
@@ -141,7 +141,7 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     .into(binding.ivCourseThumbnail);
 
             Glide.with(context)
-                    .load(R.drawable.avatar)
+                    .load(course.getMentorAvatar())
                     .placeholder(R.drawable.avatar)
                     .into(binding.ivInstructorAvatar);
 
