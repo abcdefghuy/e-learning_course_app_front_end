@@ -52,8 +52,11 @@ public class RecentCourseManager {
         return new Gson().fromJson(json, type);
     }
 
-    public static void clearCourses(Context context) {
-        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit().remove(KEY_COURSES).apply();
+    public static void clearRecentCourses(Context context) {
+        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_COURSES, "[]")
+                .apply();
     }
 
     // ===========================
@@ -93,6 +96,7 @@ public class RecentCourseManager {
     public static void clearSearches(Context context) {
         context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit().remove(KEY_SEARCHES).apply();
     }
+
     public static void removeSearch(Context context, String keyword) {
         SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         List<String> currentList = getRecentSearches(context);

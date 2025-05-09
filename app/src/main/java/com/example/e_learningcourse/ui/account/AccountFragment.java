@@ -37,6 +37,7 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.FragmentAccountBinding;
 import com.example.e_learningcourse.model.request.UserRequest;
 import com.google.android.material.textfield.TextInputEditText;
+import com.example.e_learningcourse.utils.NotificationUtils;
 
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -199,7 +200,7 @@ public class AccountFragment extends Fragment {
                 public void onError(String requestId, ErrorInfo error) {
                     binding.btnSave.setEnabled(true);
                     binding.btnSave.setText("Save Changes");
-                    Toast.makeText(requireContext(), "Upload image failed: " + error.getDescription(), Toast.LENGTH_SHORT).show();
+                    showError("Upload image failed: " + error.getDescription());
                 }
 
                 @Override
@@ -259,9 +260,9 @@ public class AccountFragment extends Fragment {
 
         userViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                showError(errorMessage);
             } else {
-                Toast.makeText(requireContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show();
+                showSuccess("Profile updated successfully!");
                 // Cập nhật lại thông tin người dùng trong ViewModel
                 setupViews();
             }
@@ -324,5 +325,13 @@ public class AccountFragment extends Fragment {
             Log.e("AccountFragment", "Error cleaning up MediaManager: " + e.getMessage());
         }
         binding = null;
+    }
+
+    private void showError(String message) {
+        NotificationUtils.showError(requireContext(), binding.getRoot(), message);
+    }
+
+    private void showSuccess(String message) {
+        NotificationUtils.showSuccess(requireContext(), binding.getRoot(), message);
     }
 }

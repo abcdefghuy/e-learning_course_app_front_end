@@ -2,7 +2,6 @@ package com.example.e_learningcourse.ui.course;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,18 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.CourseAdapter;
 import com.example.e_learningcourse.adapter.PopularCoursesAdapter;
+import com.example.e_learningcourse.databinding.ActivityPopularCoursesBinding;
 import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.bookmark.BookmarkViewModel;
+import com.example.e_learningcourse.utils.NotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PopularCoursesActivity extends AppCompatActivity implements CourseAdapter.OnBookmarkClickListener {
+    private ActivityPopularCoursesBinding binding;
     private CourseAdapter adapter;
     private List<CourseResponse> courses;
-    private RecyclerView recyclerView;
     private CourseViewModel courseViewModel;
     private BookmarkViewModel bookmarkViewModel;
     private boolean isLoading = false;
@@ -34,26 +35,26 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popular_courses);
+        binding = ActivityPopularCoursesBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Initialize ViewModel
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
+
         // Set up back button
-        ImageButton backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> {
+        binding.backButton.setOnClickListener(v -> {
             setResult(RESULT_OK);
             finish();
         });
 
         // Set up RecyclerView
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Initialize adapter and set it to RecyclerView
         adapter = new CourseAdapter(this);
         adapter.setOnBookmarkClickListener(this);
-        recyclerView.setAdapter(adapter);
+        binding.recyclerView.setAdapter(adapter);
 
         // Show shimmer loading
         adapter.showShimmer(true);
@@ -77,8 +78,16 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
             }
         });
 
+        // Observe bookmark changes
+        bookmarkViewModel.getBookmarkStateChanged().observe(this, changed -> {
+            if (changed) {
+                // Refresh the course list when bookmark state changes
+                initializeCourses();
+            }
+        });
+
         // Add scroll listener for pagination
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -121,7 +130,17 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
         String message = newBookmarkState ?
                 getString(R.string.bookmark_added) :
                 getString(R.string.bookmark_removed);
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        showMessage(message);
         adapter.notifyItemChanged(position);
+    }
+
+    private void showMessage(String message) {
+        NotificationUtils.showInfo(this, binding.getRoot(), message);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

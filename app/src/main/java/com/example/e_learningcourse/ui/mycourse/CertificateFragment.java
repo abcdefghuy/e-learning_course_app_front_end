@@ -38,6 +38,7 @@ import com.example.e_learningcourse.model.request.ReviewRequest;
 import com.example.e_learningcourse.ui.account.UserViewModel;
 import com.example.e_learningcourse.ui.review.ReviewViewModel;
 import com.google.android.material.button.MaterialButton;
+import com.example.e_learningcourse.utils.NotificationUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -76,7 +77,7 @@ public class CertificateFragment extends Fragment {
         // Get courseId from arguments
         courseId = getArguments() != null ? getArguments().getLong("courseId") : -1;
         if (courseId == -1) {
-            Toast.makeText(requireContext(), "Course ID not found", Toast.LENGTH_SHORT).show();
+            showError("Invalid course ID");
             requireActivity().onBackPressed();
             return;
         }
@@ -263,6 +264,14 @@ public class CertificateFragment extends Fragment {
                 reviewDialog.dismiss();
             }
         }
+    }
+
+    private void showError(String message) {
+        NotificationUtils.showError(requireContext(), binding.getRoot(), message);
+    }
+
+    private void showSuccess(String message) {
+        NotificationUtils.showSuccess(requireContext(), binding.getRoot(), message);
     }
 
     @Override

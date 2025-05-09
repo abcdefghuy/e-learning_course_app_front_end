@@ -130,21 +130,42 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_eye"
-                app:tint="#1B1B1B" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_eye"
+                    app:tint="#1B1B1B" />
+
+                <TextView
+                    android:id="@+id/tvRecentViewTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Recently Viewed Courses"
+                    android:textColor="#1B1B1B"
+                    android:textSize="20sp" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/tvRecentViewTitle"
+                android:id="@+id/tvClearAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:text="Clear All"
+                android:textColor="#FF5722"
+                android:textSize="14sp"
                 android:fontFamily="sans-serif-medium"
-                android:text="Recently Viewed Courses"
-                android:textColor="#1B1B1B"
-                android:textSize="20sp" />
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"/>
 
         </LinearLayout>
 

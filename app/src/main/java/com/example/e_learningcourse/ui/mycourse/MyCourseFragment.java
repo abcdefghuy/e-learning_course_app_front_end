@@ -11,8 +11,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.FragmentMycourseBinding;
-import com.example.e_learningcourse.ui.mycourse.ContinueCourseFragment;
-import com.example.e_learningcourse.ui.lesson.LessonsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class MyCourseFragment extends Fragment {

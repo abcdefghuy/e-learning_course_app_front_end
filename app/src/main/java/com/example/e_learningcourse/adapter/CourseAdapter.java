@@ -66,6 +66,11 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
+    public void clearCourses() {
+        courses.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
         return showShimmer ? VIEW_TYPE_SHIMMER : VIEW_TYPE_ITEM;

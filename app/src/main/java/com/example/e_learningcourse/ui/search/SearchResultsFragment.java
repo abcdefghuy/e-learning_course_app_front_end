@@ -21,6 +21,7 @@ import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.bookmark.BookmarkViewModel;
 import com.example.e_learningcourse.ui.course.CourseViewModel;
 import com.google.android.material.tabs.TabLayout;
+import com.example.e_learningcourse.utils.NotificationUtils;
 
 public class SearchResultsFragment extends Fragment implements CourseAdapter.OnItemSaveClickListener, CourseAdapter.OnBookmarkClickListener {
     private FragmentSearchResultsBinding binding;
@@ -44,6 +45,14 @@ public class SearchResultsFragment extends Fragment implements CourseAdapter.OnI
         bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
         setupViews();
         observeData();
+
+        // Observe bookmark changes
+        bookmarkViewModel.getBookmarkStateChanged().observe(getViewLifecycleOwner(), changed -> {
+            if (changed) {
+                // Refresh the search results when bookmark state changes
+                performSearch(currentQuery);
+            }
+        });
     }
 
     private void setupViews() {
@@ -161,7 +170,11 @@ public class SearchResultsFragment extends Fragment implements CourseAdapter.OnI
         String message = newBookmarkState ?
                 getString(R.string.bookmark_added) :
                 getString(R.string.bookmark_removed);
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        showMessage(message);
         resultsAdapter.notifyItemChanged(position);
+    }
+
+    private void showMessage(String message) {
+        NotificationUtils.showInfo(requireContext(), binding.getRoot(), message);
     }
 }

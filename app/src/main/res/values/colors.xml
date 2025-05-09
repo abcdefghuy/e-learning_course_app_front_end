@@ -23,4 +23,10 @@
     <color name="gray_light">#E0E0E0</color>
     <color name="transparent">#00000000</color>
     <color name="yellow">#FFD700</color>
+    <color name="primary">#3A5BA0</color>
+    <color name="button_material_light">#F5F5F5</color>
+    <color name="success">#4CAF50</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+    <color name="warning">#FFC107</color>
 </resources>

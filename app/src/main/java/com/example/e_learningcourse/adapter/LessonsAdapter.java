@@ -2,7 +2,6 @@ package com.example.e_learningcourse.adapter;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,9 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ItemLessonBinding;
-import com.example.e_learningcourse.model.Lesson;
-import com.example.e_learningcourse.model.Section;
-import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.model.response.LessonResponse;
 
 import java.util.ArrayList;
@@ -34,7 +30,6 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
         sections.addAll(newLessons);
         notifyItemRangeInserted(oldSize, newLessons.size());
     }
-
 
     public void setLesson(List<LessonResponse> sections) {
         this.sections = sections;

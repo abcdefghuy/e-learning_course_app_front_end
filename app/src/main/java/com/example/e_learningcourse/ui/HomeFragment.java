@@ -40,6 +40,7 @@ import com.example.e_learningcourse.ui.mentor.MentorActivity;
 import com.example.e_learningcourse.ui.mentor.MentorViewModel;
 import com.example.e_learningcourse.ui.mycourse.ContinueCourseViewModel;
 import com.example.e_learningcourse.ui.mycourse.ContinueLearningActivity;
+import com.example.e_learningcourse.utils.NotificationUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,12 +74,22 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
             }
     );
 
+    private final ActivityResultLauncher<Intent> bookmarkLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    loadSampleData();
+                }
+            }
+    );
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -87,7 +98,22 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         setupClickListeners();
         setupSectionTitles();
         loadSampleData();
+
+        // Observe bookmark changes
+        bookmarkViewModel.getBookmarkStateChanged().observe(getViewLifecycleOwner(), changed -> {
+            if (changed) {
+                loadPopularCourse();
+            }
+        });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Reload data when fragment becomes visible
+        loadSampleData();
+    }
+
     private void initializeViewModels() {
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
@@ -110,8 +136,12 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         binding.rvMentors.setAdapter(mentorAdapter);
         binding.rvContinueLearning.setAdapter(continueLearningAdapter);
     }
+
     private void setupClickListeners() {
-        binding.ibBookmark.setOnClickListener(v -> navigateTo(BookMarkActivity.class));
+        binding.ibBookmark.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), BookMarkActivity.class);
+            bookmarkLauncher.launch(intent);
+        });
         
         View categorySection = binding.getRoot().findViewById(R.id.categoriesSection);
         View popularCoursesSection = binding.getRoot().findViewById(R.id.popularCoursesSection);
@@ -119,7 +149,10 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         View mentorSection = binding.getRoot().findViewById(R.id.topMentorSection);
 
         categorySection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(CategoryActivity.class));
-        popularCoursesSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(PopularCoursesActivity.class));
+        popularCoursesSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), PopularCoursesActivity.class);
+            popularCoursesLauncher.launch(intent);
+        });
         continueLearningSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(ContinueLearningActivity.class));
         mentorSection.findViewById(R.id.tvSeeAll).setOnClickListener(v -> navigateTo(MentorActivity.class));
     }
@@ -189,7 +222,7 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         String message = newBookmarkState ? 
                 getString(R.string.bookmark_added) : 
                 getString(R.string.bookmark_removed);
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        showMessage(message);
         popularCoursesAdapter.notifyItemChanged(position);
     }
 
@@ -224,8 +257,13 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
             }
         });
     }
+
     private void navigateTo(Class<?> activityClass) {
         startActivity(new Intent(requireContext(), activityClass));
+    }
+
+    private void showMessage(String message) {
+        NotificationUtils.showInfo(requireContext(), binding.getRoot(), message);
     }
 }
 

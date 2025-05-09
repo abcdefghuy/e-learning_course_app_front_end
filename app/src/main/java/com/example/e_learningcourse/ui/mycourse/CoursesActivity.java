@@ -7,8 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ActivityCoursesBinding;
-import com.example.e_learningcourse.ui.lesson.LessonsFragment;
-import com.example.e_learningcourse.ui.mycourse.CertificateFragment;
+import com.example.e_learningcourse.ui.lesson.MyLessonsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class CoursesActivity extends AppCompatActivity {
@@ -29,7 +28,7 @@ public class CoursesActivity extends AppCompatActivity {
         setupTabs();
         // Show About fragment by default
         if (savedInstanceState == null) {
-            showFragment(new LessonsFragment(), courseId);
+            showFragment(new MyLessonsFragment(), courseId);
         }
         binding.btnBack.setOnClickListener(v -> finish());
     }
@@ -44,7 +43,7 @@ public class CoursesActivity extends AppCompatActivity {
                         fragment = new CertificateFragment();
                         break;
                     default:
-                        fragment = new LessonsFragment();
+                        fragment = new MyLessonsFragment();
                         break;
                 }
                 showFragment(fragment, courseId);

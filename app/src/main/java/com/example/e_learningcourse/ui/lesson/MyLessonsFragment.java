@@ -16,16 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.e_learningcourse.adapter.LessonsAdapter;
 import com.example.e_learningcourse.databinding.FragmentLessonsBinding;
-import com.example.e_learningcourse.model.Lesson;
-import com.example.e_learningcourse.model.Section;
 import com.example.e_learningcourse.model.response.LessonResponse;
-import com.example.e_learningcourse.ui.course.CourseViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class LessonsFragment extends Fragment implements LessonsAdapter.OnLessonClickListener {
+public class MyLessonsFragment extends Fragment implements LessonsAdapter.OnLessonClickListener {
 
     private FragmentLessonsBinding binding;
     private LessonsAdapter adapter;
@@ -35,8 +32,8 @@ public class LessonsFragment extends Fragment implements LessonsAdapter.OnLesson
 
     private LessonViewModel lessonViewModel;
 
-    public static LessonsFragment newInstance() {
-        return new LessonsFragment();
+    public static MyLessonsFragment newInstance() {
+        return new MyLessonsFragment();
     }
 
     @Nullable

@@ -96,6 +96,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.ResultScreenActivity" />
+        <activity android:name=".ui.lesson.QuizActivity" />
     </application>
 
 </manifest>

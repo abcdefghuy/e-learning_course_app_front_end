@@ -154,6 +154,9 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), CourseDetailsActivity.class);
                 intent.putExtra("courseId", course.getCourseId());
+                intent.putExtra("mentorName", course.getMentorName());
+                intent.putExtra("mentorAvatar", course.getMentorAvatar());
+                intent.putExtra("rating", course.getRating());
                 v.getContext().startActivity(intent);
             });
         }
