@@ -3,6 +3,8 @@ package com.example.e_learningcourse.model.response;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 public class LessonResponse implements Parcelable {
     private Long lessonId;
     private Long courseId;
@@ -12,22 +14,12 @@ public class LessonResponse implements Parcelable {
     private int duration;
     private String lessonVideoUrl;
     private int lessonOrder;
+    @SerializedName("hasQuiz")
+    private boolean hasQuiz;
 
     public LessonResponse() {
     }
 
-    public LessonResponse(Long lessonId, Long courseId, String lessonName, String lessonDescription, String status, int duration, String lessonVideoUrl, int lessonOrder) {
-        this.lessonId = lessonId;
-        this.courseId = courseId;
-        this.lessonName = lessonName;
-        this.lessonDescription = lessonDescription;
-        this.status = status;
-        this.duration = duration;
-        this.lessonVideoUrl = lessonVideoUrl;
-        this.lessonOrder = lessonOrder;
-    }
-
-    // Implement Parcelable methods
 
     protected LessonResponse(Parcel in) {
         if (in.readByte() == 0) {
@@ -46,6 +38,7 @@ public class LessonResponse implements Parcelable {
         duration = in.readInt();
         lessonVideoUrl = in.readString();
         lessonOrder = in.readInt();
+        hasQuiz = in.readByte() != 0;
     }
 
     public static final Creator<LessonResponse> CREATOR = new Creator<LessonResponse>() {
@@ -85,6 +78,7 @@ public class LessonResponse implements Parcelable {
         dest.writeInt(duration);
         dest.writeString(lessonVideoUrl);
         dest.writeInt(lessonOrder);
+        dest.writeByte((byte) (hasQuiz ? 1 : 0));
     }
 
     // Getters and Setters...
@@ -151,5 +145,11 @@ public class LessonResponse implements Parcelable {
 
     public void setLessonOrder(int lessonOrder) {
         this.lessonOrder = lessonOrder;
+    }
+    public boolean hasQuiz() {
+        return hasQuiz;
+    }
+    public void setHasQuiz(boolean hasQuiz) {
+        this.hasQuiz = hasQuiz;
     }
 }

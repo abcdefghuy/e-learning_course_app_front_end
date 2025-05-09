@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.FragmentAboutBinding;
 
@@ -23,6 +24,7 @@ public class AboutCourseFragment extends Fragment {
         return new AboutCourseFragment();
     }
     private Long courseId;
+    private String mentorName, mentorAvatar;
     private SharedCourseViewModel sharedViewModel;
 
     @Nullable
@@ -38,6 +40,9 @@ public class AboutCourseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         courseId = getArguments() != null ? getArguments().getLong("courseId") : -1;
+        mentorAvatar = getArguments() != null ? getArguments().getString("mentorAvatar") : "";
+        mentorName = getArguments() != null ? getArguments().getString("mentorName") : "";
+
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedCourseViewModel.class);
         setupContent(courseId);
     }
@@ -46,9 +51,11 @@ public class AboutCourseFragment extends Fragment {
         sharedViewModel.getCourseDetail().observe(getViewLifecycleOwner(), detail -> {
             if (detail != null) {
                 binding.tvAboutCourse.setText(detail.getCourseDescription());
-                binding.ivTutorAvatar.setImageResource(R.drawable.avatar);
-                binding.tvTutorSubject.setText("DESIGN");
-                binding.tvTutorName.setText("Huy");
+                Glide.with(requireContext())
+                        .load(mentorAvatar)
+                        .placeholder(R.drawable.avatar)
+                        .into(binding.ivTutorAvatar);
+                binding.tvTutorName.setText(mentorName);
                 binding.tvStudentCount.setText(String.valueOf(detail.getStudentQuantity()));
                 binding.tvLevel.setText(String.valueOf(detail.getLevel()));
                 binding.tvLevel.setText(detail.getLevel());

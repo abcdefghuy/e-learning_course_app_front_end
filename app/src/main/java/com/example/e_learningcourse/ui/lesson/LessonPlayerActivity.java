@@ -1,12 +1,16 @@
 package com.example.e_learningcourse.ui.lesson;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.view.Window;
+import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,18 +20,17 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.LessonsAdapter;
 import com.example.e_learningcourse.databinding.ActivityLessonPlayerBinding;
 import com.example.e_learningcourse.model.response.LessonResponse;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.customui.views.YouTubePlayerSeekBar;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
+import com.example.e_learningcourse.utils.NotificationUtils;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class LessonPlayerActivity extends AppCompatActivity {
     private ActivityLessonPlayerBinding binding;
@@ -38,7 +41,26 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
     private float videoDuration = 0;
     private boolean lessonMarked = false;
+    private boolean quizTriggered = false;
     private LessonViewModel lessonViewModel;
+
+    private boolean isDemo;
+    private long courseId;
+
+    private final ActivityResultLauncher<Intent> quizLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                boolean passed = result.getData().getBooleanExtra("quiz_passed", false);
+                if (passed) {
+                    markLessonCompleted();
+                } else {
+                    showMessage("Bạn cần trả lời đúng ít nhất 70% số câu hỏi để hoàn thành bài học! Làm lại nhé.");
+                    showQuizScreen();
+                }
+            }
+        }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +72,11 @@ public class LessonPlayerActivity extends AppCompatActivity {
         // Get lesson data from intent
         currentLesson = getIntent().getParcelableExtra("current_lesson");
         nextLessons = getIntent().getParcelableArrayListExtra("next_lessons");
+        isDemo = getIntent().getBooleanExtra("isDemo", false);
+        courseId = currentLesson != null ? currentLesson.getCourseId() : -1;
 
         if (currentLesson == null) {
-            Toast.makeText(this, "Lesson data not found", Toast.LENGTH_SHORT).show();
+            showMessage("Lesson data not found");
             finish();
             return;
         }
@@ -63,7 +87,7 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
     private void setupUI() {
         if (currentLesson == null) {
-            Toast.makeText(this, "Lesson data not found", Toast.LENGTH_SHORT).show();
+            showMessage("Lesson data not found");
             finish();
             return;
         }
@@ -116,8 +140,15 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onCurrentSecond(@NonNull YouTubePlayer youTubePlayer, float second) {
-                if (videoDuration > 0 && second >= videoDuration - 1 && !lessonMarked) {
-                    markLessonCompleted();
+                if (videoDuration > 0 && second >= videoDuration - 1 && !lessonMarked && !quizTriggered) {
+                    quizTriggered = true;
+                    if (isDemo) {
+                        showDemoEndDialog();
+                    } else if (currentLesson.hasQuiz()) {
+                        showQuizScreen();
+                    } else {
+                        markLessonCompleted();
+                    }
                 }
             }
         };
@@ -128,6 +159,7 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
     private void loadNewLesson(LessonResponse lesson) {
         lessonMarked = false;
+        quizTriggered = false;
         if (currentPlayer != null) {
             YouTubePlayerUtils.loadOrCueVideo(currentPlayer, getLifecycle(), extractVideoId(lesson.getLessonVideoUrl()), 0F);
         }
@@ -138,7 +170,7 @@ public class LessonPlayerActivity extends AppCompatActivity {
         lessonViewModel.updateLessonProgress(currentLesson.getLessonId());
         lessonViewModel.lessonUpdateResult.observe(LessonPlayerActivity.this, success -> {
             if (success != null && success) {
-                Toast.makeText(LessonPlayerActivity.this, "Bài học đã được đánh dấu hoàn thành!", Toast.LENGTH_SHORT).show();
+                showMessage("Bài học đã được đánh dấu hoàn thành!");
                 refreshLessonList();
             }
         });
@@ -165,5 +197,46 @@ public class LessonPlayerActivity extends AppCompatActivity {
                 setupUI(); // gọi lại để cập nhật danh sách
             }
         });
+    }
+
+    private void showMessage(String message) {
+        NotificationUtils.showInfo(this, binding.getRoot(), message);
+    }
+
+    private void showQuizScreen() {
+        Intent intent = new Intent(this, QuizActivity.class);
+        intent.putExtra("lessonId", currentLesson.getLessonId());
+        quizLauncher.launch(intent);
+    }
+
+    private void showDemoEndDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_demo_end);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+        TextView tvMessage = dialog.findViewById(R.id.tvMessage);
+        MaterialButton btnEnroll = dialog.findViewById(R.id.btnEnroll);
+        MaterialButton btnCancel = dialog.findViewById(R.id.btnCancel);
+
+        tvTitle.setText("Demo Lesson Completed");
+        tvMessage.setText("You've completed the demo lesson. Would you like to enroll in the full course to continue learning?");
+
+        btnEnroll.setOnClickListener(v -> {
+            dialog.dismiss();
+            Intent intent = new Intent();
+            intent.putExtra("courseId", courseId);
+            setResult(RESULT_OK, intent);
+            finish();
+        });
+
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+            finish();
+        });
+
+        dialog.setCancelable(false);
+        dialog.show();
     }
 }

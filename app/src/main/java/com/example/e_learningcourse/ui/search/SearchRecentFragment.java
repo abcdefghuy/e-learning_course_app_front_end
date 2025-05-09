@@ -24,6 +24,7 @@ import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.bookmark.BookmarkViewModel;
+import com.example.e_learningcourse.utils.NotificationUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,10 +63,34 @@ public class SearchRecentFragment extends Fragment implements RecentSearchAdapte
         super.onViewCreated(view, savedInstanceState);
         setupRecentSearchList();
         setupRecentViewList();
+        setupClearAllButton();
         bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
         recentSearchAdapter.setOnItemRemoveListener(this);
         recentViewAdapter.setOnBookmarkClickListener(this);
         recentSearchAdapter.setOnItemClickListener(this);
+
+        // Observe bookmark changes
+        bookmarkViewModel.getBookmarkStateChanged().observe(getViewLifecycleOwner(), changed -> {
+            if (changed) {
+                // Refresh the list when bookmark state changes
+                setupRecentViewList();
+            }
+        });
+    }
+
+    private void setupClearAllButton() {
+        binding.tvClearAll.setOnClickListener(v -> {
+            // Xóa tất cả khóa học đã xem
+            RecentCourseManager.clearRecentCourses(requireContext());
+            // Cập nhật UI
+            recentCourses.clear();
+            recentViewAdapter.clearCourses();
+            // Hiển thị layout no data
+            binding.recentViewCard.setVisibility(View.GONE);
+            binding.layoutNoRecentView.setVisibility(View.VISIBLE);
+            // Hiển thị thông báo
+            NotificationUtils.showInfo(requireContext(), binding.getRoot(), getString(R.string.recent_courses_cleared));
+        });
     }
 
     private void setupRecentSearchList() {
@@ -120,6 +145,7 @@ public class SearchRecentFragment extends Fragment implements RecentSearchAdapte
         super.onDestroyView();
         binding = null;
     }
+
     @Override
     public void onItemRemove(int position) {
         if (position >= 0 && position < recentSearchAdapter.getItemCount()) {
@@ -154,7 +180,7 @@ public class SearchRecentFragment extends Fragment implements RecentSearchAdapte
         // Thông báo và cập nhật UI
         String message = newBookmarkState ?
                 getString(R.string.bookmark_added) : getString(R.string.bookmark_removed);
-        // Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        NotificationUtils.showInfo(requireContext(), binding.getRoot(), message);
         recentViewAdapter.updateCourse(position);
     }
 

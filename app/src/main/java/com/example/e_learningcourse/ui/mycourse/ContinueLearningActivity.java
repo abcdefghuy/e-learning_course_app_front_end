@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContinueLearningActivity extends AppCompatActivity {
-
     private ContinueLearningAdapter courseAdapter;
     private ContinueCourseViewModel continueCourseViewModel;
     private boolean isLoading = false;

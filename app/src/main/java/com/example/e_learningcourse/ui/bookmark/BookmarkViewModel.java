@@ -13,6 +13,8 @@ public class BookmarkViewModel extends BaseViewModel {
     private BookmarkRepository bookmarkRepository;
     private final MutableLiveData<ApiResponse<PaginateResponse<CourseResponse>>> _courses = new MutableLiveData<>();
     private final LiveData<ApiResponse<PaginateResponse<CourseResponse>>> courses= _courses;
+
+    private final MutableLiveData<Boolean> _bookmarkStateChanged = new MutableLiveData<>();
     private int currentPage = 0;
     private final int pageSize = 10;
     private boolean isLastPage = false;
@@ -20,6 +22,9 @@ public class BookmarkViewModel extends BaseViewModel {
 
     public BookmarkViewModel(){
         bookmarkRepository = new BookmarkRepository();
+    }
+    public LiveData<Boolean> getBookmarkStateChanged() {
+        return _bookmarkStateChanged;
     }
 
     public LiveData<ApiResponse<PaginateResponse<CourseResponse>>> getCourses() {
@@ -46,6 +51,7 @@ public class BookmarkViewModel extends BaseViewModel {
     public void addBookmark(Long courseId) {
         bookmarkRepository.addBookmark(courseId).observeForever(response -> {
             if (response != null && response.isSuccess()) {
+                _bookmarkStateChanged.postValue(true);
                 fetchBookmark();
             }
         });
@@ -61,6 +67,7 @@ public class BookmarkViewModel extends BaseViewModel {
     private void removeBookmark(Long courseId) {
         bookmarkRepository.removeBookmark(courseId).observeForever(response -> {
             if (response != null && response.isSuccess()) {
+                _bookmarkStateChanged.postValue(true);
                 fetchBookmark();
             }
         });

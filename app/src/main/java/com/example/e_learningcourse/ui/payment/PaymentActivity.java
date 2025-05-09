@@ -16,6 +16,7 @@ import com.example.e_learningcourse.databinding.ActivityPaymentBinding;
 import com.example.e_learningcourse.ui.ResultScreenActivity;
 import com.example.e_learningcourse.ui.base.BaseActivity;
 import com.example.e_learningcourse.ui.course.CourseDetailsActivity;
+import com.example.e_learningcourse.utils.NotificationUtils;
 
 public class PaymentActivity extends BaseActivity<ActivityPaymentBinding, PaymentViewModel> {
 
@@ -75,7 +76,7 @@ public class PaymentActivity extends BaseActivity<ActivityPaymentBinding, Paymen
             if (response.isSuccess()) {
                 openVNPay(response.getData());
             } else {
-                Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+                showError(response.getMessage());
                 finish();
             }
         });
@@ -108,14 +109,24 @@ public class PaymentActivity extends BaseActivity<ActivityPaymentBinding, Paymen
             intent.putExtra("icon", R.drawable.ic_check);
             intent.putExtra("buttonText", "Continue");
             intent.putExtra("targetActivity", CourseDetailsActivity.class.getName());
+            showSuccess("Payment successful!");
         } else {
             intent.putExtra("title", "Payment failed!");
             intent.putExtra("icon", R.drawable.ic_error);
             intent.putExtra("buttonText", "Try again");
             intent.putExtra("targetActivity", MainActivity.class.getName());
+            showError("Payment failed. Please try again later.");
         }
 
         startActivity(intent);
         finish();
+    }
+
+    private void showError(String message) {
+        NotificationUtils.showError(this, binding.getRoot(), message);
+    }
+
+    private void showSuccess(String message) {
+        NotificationUtils.showSuccess(this, binding.getRoot(), message);
     }
 }
