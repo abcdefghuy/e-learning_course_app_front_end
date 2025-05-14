@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.example.e_learningcourse.utils.CurrencyUtils"/>
         <variable
             name="viewModel"
             type="com.example.e_learningcourse.ui.payment.PaymentViewModel" />
@@ -158,7 +159,7 @@
                 android:layout_marginHorizontal="39dp"
                 android:layout_marginBottom="19dp"
                 android:background="@drawable/rounded_button"
-                android:text='@{"Enroll Course - $" + viewModel.amount}'
+                android:text='@{"Enroll Course - " + CurrencyUtils.formatCurrencyVND(viewModel.amount)}'
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"

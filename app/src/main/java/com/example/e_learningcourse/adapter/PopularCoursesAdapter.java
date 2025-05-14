@@ -22,8 +22,10 @@ import com.example.e_learningcourse.model.Course;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.course.CourseDetailsActivity;
+import com.example.e_learningcourse.utils.CurrencyUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -125,10 +127,9 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             Log.d("PopularCoursesAdapter", "Course price: " + course.getCoursePrice());
             Log.d("PopularCoursesAdapter", "Is best seller: " + course.isBestSeller());
 
-            String priceText = String.format(Locale.getDefault(), "$%.2f", course.getCoursePrice());
-            binding.tvPrice.setText(priceText);
+            binding.tvPrice.setText(CurrencyUtils.formatCurrencyVND(course.getCoursePrice()));
             binding.tvPrice.setVisibility(View.VISIBLE);
-            Log.d("PopularCoursesAdapter", "Price text set to: " + priceText);
+//            Log.d("PopularCoursesAdapter", "Price text set to: " + priceText);
 
             boolean isBestSeller = course.isBestSeller();
             binding.tvBestSeller.setVisibility(isBestSeller ? View.VISIBLE : View.GONE);
@@ -143,6 +144,7 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             Glide.with(context)
                     .load(course.getMentorAvatar())
                     .placeholder(R.drawable.avatar)
+                    .circleCrop()
                     .into(binding.ivInstructorAvatar);
 
             binding.ivBookmark.setOnClickListener(v -> {

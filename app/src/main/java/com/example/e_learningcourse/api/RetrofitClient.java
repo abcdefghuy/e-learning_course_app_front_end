@@ -27,7 +27,8 @@ public class RetrofitClient {
 
     private static OkHttpClient getAuthenticatedClient() {
         if (authenticatedClient == null) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY);
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY);
 
             Interceptor tokenInterceptor = chain -> {
                 String token = TokenManager.getInstance(App.getContext()).getToken();
@@ -41,6 +42,7 @@ public class RetrofitClient {
             authenticatedClient = new OkHttpClient.Builder()
                     .addInterceptor(logging)
                     .addInterceptor(tokenInterceptor)
+                    .authenticator(new TokenAuthenticator(App.getContext()))
                     .build();
         }
         return authenticatedClient;
