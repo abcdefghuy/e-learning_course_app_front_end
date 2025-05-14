@@ -17,6 +17,7 @@ import com.example.e_learningcourse.databinding.ItemCourseShimmerBinding;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
 import com.example.e_learningcourse.model.response.CourseResponse;
 import com.example.e_learningcourse.ui.course.CourseDetailsActivity;
+import com.example.e_learningcourse.utils.CurrencyUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +123,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public void bind(CourseResponse course, int position) {
             binding.tvTitle.setText(course.getCourseName());
             binding.tvInstructor.setText(course.getMentorName());
-            binding.tvPrice.setText(String.format(Locale.getDefault(), "$%.2f", course.getCoursePrice()));
+            binding.tvPrice.setText(CurrencyUtils.formatCurrencyVND(course.getCoursePrice()));
             Glide.with(context)
                 .load(course.getCourseImg())
                 //.placeholder(R.drawable.ic_placeholder)
@@ -135,6 +136,7 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Glide.with(context)
                 .load(course.getMentorAvatar())
                 //.placeholder(R.drawable.ic_placeholder)
+                    .circleCrop()
                 .into(binding.ivInstructorAvatar);
             binding.btnBookmark.setImageResource(
                 course.isBookmarked() ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark_outline

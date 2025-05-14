@@ -80,6 +80,10 @@ public class PaymentActivity extends BaseActivity<ActivityPaymentBinding, Paymen
                 finish();
             }
         });
+
+        binding.backButton.setOnClickListener(v -> {
+            onBackPressed();
+        });
     }
 
     @Override

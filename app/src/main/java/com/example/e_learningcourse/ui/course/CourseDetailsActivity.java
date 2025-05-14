@@ -21,6 +21,7 @@ import com.example.e_learningcourse.ui.lesson.CourseLessonFragment;
 import com.example.e_learningcourse.ui.lesson.MyLessonsFragment;
 import com.example.e_learningcourse.ui.payment.PaymentActivity;
 import com.example.e_learningcourse.ui.review.ReviewsFragment;
+import com.example.e_learningcourse.utils.CurrencyUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.example.e_learningcourse.utils.NotificationUtils;
 
@@ -76,8 +77,9 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 Glide.with(this)
                         .load(mentorAvatar)
                         .placeholder(R.drawable.avatar)
+                        .circleCrop()
                         .into(binding.ivInstructorAvatar);
-                binding.tvTotalPrice.setText(String.valueOf(courseDetailResponse.getCoursePrice()));
+                binding.tvTotalPrice.setText(CurrencyUtils.formatCurrencyVND(courseDetailResponse.getCoursePrice()));
                 binding.tvRating.setText(String.valueOf(courseDetailResponse.getRating()));
                 binding.tvLessonsCount.setText(String.valueOf(courseDetailResponse.getLessonCount()) + " lessons");
                 binding.tvReviewCount.setText(String.valueOf(courseDetailResponse.getReviewCount()) + " reviews");
@@ -86,6 +88,9 @@ public class CourseDetailsActivity extends AppCompatActivity {
                         isBookmarked ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark
                 );
                 courseDetailResponse.setRating(rating);
+                Glide.with(this)
+                        .load(courseDetailResponse.getCourseImg())
+                        .into(binding.ivCourseImage);
                 sharedViewModel.setCourseDetail(courseDetailResponse);
 
                 if (courseDetailResponse.isEnrolled()) {
