@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout;
 public class CoursesActivity extends AppCompatActivity {
     private ActivityCoursesBinding binding;
     private Long courseId;
+    private int progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +21,7 @@ public class CoursesActivity extends AppCompatActivity {
         binding = ActivityCoursesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         courseId = getIntent().getLongExtra("courseId", -1);
+        progress = getIntent().getIntExtra("progress", 0);
         if (courseId == -1) {
             // Handle error: courseId not found
             finish();
@@ -63,8 +65,8 @@ public class CoursesActivity extends AppCompatActivity {
     private void showFragment(Fragment fragment, Long courseId) {
         Bundle bundle = new Bundle();
         bundle.putLong("courseId", courseId);
+        bundle.putInt("progress", progress);
         fragment.setArguments(bundle);
-
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)

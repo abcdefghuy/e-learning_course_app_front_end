@@ -72,14 +72,28 @@
             android:screenOrientation="fullSensor"
             android:theme="@style/Theme.MaterialComponents.Light.NoActionBar" />
 
-        <activity android:name=".ui.course.CourseDetailsActivity"/>
+        <activity android:name=".ui.course.CourseDetailsActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="elearning"
+                    android:host="course" />
+            </intent-filter>
+
+        </activity>
         <activity android:name=".ui.category.CategoryActivity"/>
         <activity android:name=".ui.course.PopularCoursesActivity"/>
         <activity android:name=".ui.mycourse.ContinueLearningActivity"/>
         <activity android:name=".ui.bookmark.BookMarkActivity"/>
         <activity android:name=".ui.mycourse.CoursesActivity"/>
         <activity android:name=".ui.search.SearchActivity" />
-        <activity android:name=".ui.lesson.LessonPlayerActivity" />
+        <activity android:name=".ui.lesson.LessonPlayerActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"
+            tools:ignore="DiscouragedApi" />
         <activity android:name=".ui.mentor.MentorActivity" />
         <meta-data
             android:name="CLOUDINARY_URL"

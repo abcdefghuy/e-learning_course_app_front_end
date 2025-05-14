@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ItemCategoryBinding;
 import com.example.e_learningcourse.model.response.CategoryResponse;
 
@@ -69,6 +71,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         void bind(CategoryResponse category) {
             binding.tvCategoryName.setText(category.getCategoryName());
            // binding.ivCategoryIcon.setImageResource(category.getIconResId());
+            Glide.with(binding.getRoot().getContext())
+                    .load(category.getCategoryImageUrl())
+                    .placeholder(R.drawable.ic_art)
+                    .into(binding.ivCategoryIcon);
         }
     }
 } 

@@ -2,12 +2,16 @@ package com.example.e_learningcourse.ui.lesson;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.FrameLayout;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -15,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.LessonsAdapter;
@@ -64,10 +69,14 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         binding = ActivityLessonPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         lessonViewModel = new ViewModelProvider(this).get(LessonViewModel.class);
+
+        // Cấu hình màn hình
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // Get lesson data from intent
         currentLesson = getIntent().getParcelableExtra("current_lesson");
@@ -83,6 +92,49 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
         setupUI();
         initializeYouTubePlayer();
+    }
+
+    @Override
+    public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE) {
+            // Ẩn phần nội dung bên dưới
+            binding.scrollContent.setVisibility(View.GONE);
+
+            // CardView chiếm toàn màn hình, bỏ bo góc
+            binding.cardVideo.setRadius(0);
+            CoordinatorLayout.LayoutParams cardParams = new CoordinatorLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            );
+            binding.cardVideo.setLayoutParams(cardParams);
+
+            // FrameLayout và YouTubePlayerView cũng full màn hình
+            FrameLayout.LayoutParams videoParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            );
+            binding.videoContainer.setLayoutParams(videoParams);
+            binding.youtubePlayerView.setLayoutParams(videoParams);
+        } else {
+            // Hiện lại nội dung, đặt lại layout như cũ
+            binding.scrollContent.setVisibility(View.VISIBLE);
+
+            float radius = 8 * getResources().getDisplayMetrics().density;
+            binding.cardVideo.setRadius(radius);
+            CoordinatorLayout.LayoutParams cardParams = new CoordinatorLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            binding.cardVideo.setLayoutParams(cardParams);
+
+            FrameLayout.LayoutParams videoParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            binding.videoContainer.setLayoutParams(videoParams);
+            binding.youtubePlayerView.setLayoutParams(videoParams);
+        }
     }
 
     private void setupUI() {

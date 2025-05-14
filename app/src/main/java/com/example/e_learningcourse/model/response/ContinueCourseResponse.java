@@ -6,6 +6,7 @@ public class ContinueCourseResponse {
     private String categoryName;
     private String courseImageUrl;
     private int progress;
+    private String mentorName;
 
     public ContinueCourseResponse() {
     }
@@ -56,5 +57,12 @@ public class ContinueCourseResponse {
 
     public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    public String getMentorName() {
+        return mentorName;
+    }
+    public void setMentorName(String mentorName) {
+        this.mentorName = mentorName;
     }
 }
