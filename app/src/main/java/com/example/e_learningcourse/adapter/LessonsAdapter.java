@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ItemLessonBinding;
 import com.example.e_learningcourse.model.response.LessonResponse;
+import com.example.e_learningcourse.ui.course.AboutCourseFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,8 +70,7 @@ public class LessonsAdapter extends RecyclerView.Adapter<LessonsAdapter.LessonVi
         void bindLesson(LessonResponse lesson) {
             binding.tvLessonNumber.setText(String.valueOf(lesson.getLessonOrder()));
             binding.tvLessonTitle.setText(lesson.getLessonName());
-            binding.tvLessonDuration.setText(String.valueOf(lesson.getDuration()));
-
+            binding.tvLessonDuration.setText(AboutCourseFragment.formatDuration(lesson.getDuration()));
             // Set lesson status icon
             binding.ivLessonStatus.setImageResource(
                 lesson.getStatus().equals("UNLOCKED") ? R.drawable.ic_play_circle : R.drawable.ic_lock

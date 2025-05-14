@@ -21,7 +21,7 @@ public interface LessonAPI {
     Call<ApiResponse<Void>> updateLessonProgress(@Path("lessonId") Long lessonId);
     @GET("api/lessons/{lessonId}/quiz")
     Call<ApiResponse<List<QuizQuestionResponse>>> getQuizByLesson(@Path("lessonId") Long lessonId);
-    @GET("api/v1/courses/{courseId}/demo")
+    @GET("api/v1/lessons/{courseId}/demo")
     Call<ApiResponse<PaginateResponse<LessonResponse>>> getLessonDemoByCourse(@Path("courseId") Long courseId, @Query("page") int page, @Query("size") int limit);
 
 }
