@@ -33,8 +33,11 @@ public class AuthenticationRepository extends BaseRepository {
         liveData.observeForever(response -> {
             if (response != null && response.isSuccess() && response.getData() != null) {
                 String token = response.getData().getToken();
+                long expiresInSeconds = response.getData().getExpiresIn();
+                long expirationTimeMillis = System.currentTimeMillis() + expiresInSeconds * 1000;
+
                 TokenManager.getInstance(App.getContext()).saveToken(token);
-                TokenManager.getInstance(App.getContext()).saveExpiredToken(String.valueOf(response.getData().getExpiresIn()));
+                TokenManager.getInstance(App.getContext()).saveExpiredToken(String.valueOf(expirationTimeMillis));
             }
         });
         return liveData;
