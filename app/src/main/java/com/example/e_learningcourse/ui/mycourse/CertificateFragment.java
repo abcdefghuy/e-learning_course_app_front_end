@@ -54,11 +54,13 @@ public class CertificateFragment extends Fragment {
     private UserViewModel userViewModel;
     private Dialog reviewDialog;
     private Long courseId;
+    private int progress;
 
     public static CertificateFragment newInstance(Long courseId) {
         CertificateFragment fragment = new CertificateFragment();
         Bundle args = new Bundle();
         args.putLong("courseId", courseId);
+        args.putInt("progress", fragment.progress);
         fragment.setArguments(args);
         return fragment;
     }
@@ -76,16 +78,25 @@ public class CertificateFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Get courseId from arguments
         courseId = getArguments() != null ? getArguments().getLong("courseId") : -1;
+        progress = getArguments() != null ? getArguments().getInt("progress") : 0;
         if (courseId == -1) {
             showError("Invalid course ID");
             requireActivity().onBackPressed();
             return;
         }
-
+        if (progress == 50) {
+            binding.btnReview.setVisibility(View.VISIBLE);
+        } else {
+            binding.btnReview.setVisibility(View.GONE);
+        }
         // Initialize ViewModel
         reviewViewModel = new ViewModelProvider(this).get(ReviewViewModel.class);
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
-
+        if (progress == 100) {
+            binding.btnDownload.setVisibility(View.VISIBLE);
+        } else {
+            binding.btnDownload.setVisibility(View.GONE);
+        }
         // Set up click listeners
         binding.btnDownload.setOnClickListener(v -> downloadCertificate());
         binding.btnReview.setOnClickListener(v -> showReviewDialog());

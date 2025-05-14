@@ -2,6 +2,7 @@ package com.example.e_learningcourse.ui.course;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -40,7 +41,28 @@ public class CourseDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityCourseDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        courseId = getIntent().getLongExtra("courseId", -1);
+
+        // Xử lý deep link
+        Intent intent = getIntent();
+        if (intent != null && intent.getData() != null) {
+            Uri uri = intent.getData();
+            if (uri != null && "elearning".equals(uri.getScheme()) && "course".equals(uri.getHost())) {
+                String path = uri.getPath();
+                if (path != null && path.startsWith("/")) {
+                    String courseIdStr = path.substring(1);
+                    try {
+                        courseId = Long.parseLong(courseIdStr);
+                    } catch (NumberFormatException e) {
+                        showError("Invalid course ID");
+                        finish();
+                        return;
+                    }
+                }
+            }
+        } else {
+            courseId = getIntent().getLongExtra("courseId", -1);
+        }
+
         long userId = UserManager.getInstance(this).getUserId();
         rating = getIntent().getDoubleExtra("rating", 0);
         mentorName = getIntent().getStringExtra("mentorName");
@@ -167,6 +189,32 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 showError("Course details not available");
+            }
+        });
+        binding.btnShare.setOnClickListener(v -> {
+            CourseDetailResponse course = sharedViewModel.getCourseDetail().getValue();
+            if (course != null) {
+                String shareUrl = "https://play.google.com/store/apps/details?id=";
+                String shareText = "Check out this course: " + course.getCourseName() + "\n" +
+                        "Price: " + CurrencyUtils.formatCurrencyVND(course.getCoursePrice()) + "\n" +
+                        "Rating: " + course.getRating() + "\n";
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Khóa học hay, không thể bỏ qua!");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, shareText + shareUrl + getPackageName());
+                sendIntent.setType("text/plain");
+                
+                // Tạo chooser để chọn ứng dụng chia sẻ
+                Intent chooser = Intent.createChooser(sendIntent, "Chia sẻ khóa học");
+                
+                // Kiểm tra xem có ứng dụng nào có thể xử lý intent này không
+                if (sendIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(chooser);
+                } else {
+                    showError("Không tìm thấy ứng dụng để chia sẻ");
+                }
+            } else {
+                showError("Không thể lấy thông tin khóa học");
             }
         });
 

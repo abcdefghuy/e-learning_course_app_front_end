@@ -1,5 +1,7 @@
 package com.example.e_learningcourse.ui.lesson;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -60,9 +62,13 @@ public class CustomPlayerUiController extends AbstractYouTubePlayerListener {
         fullScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Activity activity = (Activity) view.getContext();
+
                 if (isFullScreen) {
+                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     youTubePlayerView.wrapContent();
                 } else {
+                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                     youTubePlayerView.matchParent();
                 }
                 isFullScreen = !isFullScreen;

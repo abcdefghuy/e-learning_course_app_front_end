@@ -101,8 +101,7 @@ public class ContinueLearningAdapter extends RecyclerView.Adapter<ContinueLearni
                     .into(courseImage);
             courseCategory.setText(course.getCategoryName()); // You can make this dynamic if needed
             courseTitle.setText(course.getCourseTitle());
-            instructorName.setText("Huy");
-            
+            instructorName.setText(course.getMentorName());
             // Set progress
             int progress = course.getProgress();
             progressBar.setProgress(progress);
@@ -111,6 +110,7 @@ public class ContinueLearningAdapter extends RecyclerView.Adapter<ContinueLearni
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(v.getContext(), CoursesActivity.class);
                 intent.putExtra("courseId", course.getCourseId());
+                intent.putExtra("progress", progress);
                 v.getContext().startActivity(intent);
             });
         }
