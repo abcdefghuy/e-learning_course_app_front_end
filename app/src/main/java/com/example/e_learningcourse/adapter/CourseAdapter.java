@@ -37,6 +37,14 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.context = context;
         this.courses = new ArrayList<>();
     }
+
+    public void removeCourse(int position) {
+        if (position >= 0 && position < courses.size()) {
+            courses.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     public interface OnItemSaveClickListener {
         void onItemSaveClick(CourseResponse course);
     }
