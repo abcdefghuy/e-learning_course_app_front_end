@@ -1,10 +1,12 @@
 package com.example.e_learningcourse.ui.mycourse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -15,6 +17,20 @@ import com.google.android.material.tabs.TabLayout;
 
 public class MyCourseFragment extends Fragment {
     private FragmentMycourseBinding binding;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        // Handle back press
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requireActivity().finish();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 
     @Nullable
     @Override
@@ -27,6 +43,7 @@ public class MyCourseFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupTabLayout();
+        binding.btnBack.setOnClickListener(v -> requireActivity().finish());
         // Show ContinueCourseFragment by default
         showFragment(new ContinueCourseFragment());
     }

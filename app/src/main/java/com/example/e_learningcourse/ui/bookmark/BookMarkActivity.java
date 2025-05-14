@@ -44,6 +44,9 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
         
         bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
         
+        // Initialize bookmarkedCourses list
+        bookmarkedCourses = new ArrayList<>();
+        
         // Set up back button
         binding.btnBack.setOnClickListener(v -> finish());
         
@@ -118,7 +121,10 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
 
     @Override
     public void onBookmarkClick(CourseResponse course, int position) {
-        showRemoveDialog(course, position);
+        // Verify position is valid
+        if (position >= 0 && position < adapter.getItemCount()) {
+            showRemoveDialog(course, position);
+        }
     }
 
     private void showRemoveDialog(CourseResponse course, int position) {
@@ -161,13 +167,17 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
             btnRemove.setOnClickListener(v -> {
                 // Remove the course from bookmarks
                 bookmarkViewModel.toggleBookmark(course.getCourseId(), false);
-                bookmarkedCourses.remove(position);
-                adapter.notifyItemRemoved(position);
+                
+                // Update the adapter's data
+                adapter.removeCourse(position);
+                
                 // Show feedback
                 showMessage(getString(R.string.bookmark_removed));
+                
                 // Dismiss dialog
                 dialog.dismiss();
-                // Update empty state if needed
+                
+                // Update empty state
                 updateEmptyState();
             });
         }
@@ -175,7 +185,7 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
     }
 
     private void updateEmptyState() {
-        binding.rvBookmarkedCourses.setVisibility(bookmarkedCourses.isEmpty() ? View.GONE : View.VISIBLE);
+        binding.rvBookmarkedCourses.setVisibility(adapter.getItemCount() == 0 ? View.GONE : View.VISIBLE);
     }
 
     private void showMessage(String message) {
