@@ -12,7 +12,7 @@ public class CourseDetailResponse {
     private Double coursePrice;
     private String courseImg;
     private String courseDescription;
-    private Integer duration;
+    private int duration;
     private Date createdAt;
     private Date updateAt;
     private String level;
