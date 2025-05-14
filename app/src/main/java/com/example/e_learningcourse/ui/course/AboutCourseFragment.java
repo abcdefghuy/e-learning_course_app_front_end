@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.ui.course;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.FragmentAboutBinding;
+import com.example.e_learningcourse.model.response.CourseDetailResponse;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -66,7 +68,9 @@ public class AboutCourseFragment extends Fragment {
 
                 binding.tvLastUpdate.setText(formattedUpdate);
                 binding.tvCreatedAt.setText(formattedCreated);
+                String formattedDuration = formatDuration(detail.getDuration());
 
+                binding.tvDuration.setText(formattedDuration);
                 binding.tvAboutCourse.setMaxLines(3); // Initially show 3 lines
 
                 binding.tvReadMore.setOnClickListener(v -> {
@@ -76,6 +80,26 @@ public class AboutCourseFragment extends Fragment {
             }
         });
     }
+
+    @SuppressLint("ResourceType")
+    @NonNull
+    public static String formatDuration(int duration) {
+        String formattedDuration;
+
+        if (duration < 60) {
+            formattedDuration = duration + " minutes";
+        } else {
+            int hours = duration / 60;
+            int minutes = duration % 60;
+            if (minutes == 0) {
+                formattedDuration = hours + " hours";
+            } else {
+                formattedDuration = hours + " hours " + minutes + " minutes";
+            }
+        }
+        return formattedDuration;
+    }
+
     private void setupClickListeners() {
 
         binding.tvReadMore.setOnClickListener(v -> {

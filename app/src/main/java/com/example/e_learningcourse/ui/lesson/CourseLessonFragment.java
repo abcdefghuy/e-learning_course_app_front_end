@@ -51,10 +51,6 @@ public class CourseLessonFragment extends Fragment implements LessonsAdapter.OnL
         }
     );
 
-    public static MyLessonsFragment newInstance() {
-        return new MyLessonsFragment();
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -107,7 +103,6 @@ public class CourseLessonFragment extends Fragment implements LessonsAdapter.OnL
                 }
             }
         });
-
         loadLessons(courseId);
     }
 
@@ -123,9 +118,8 @@ public class CourseLessonFragment extends Fragment implements LessonsAdapter.OnL
     }
     private void loadMoreLessons(Long courseId) {
         if (!hasMoreData) return;
-
         isLoading = true;
-        lessonViewModel.fetchLessonsByCourse(courseId);
+        lessonViewModel.fetchLessonsDemoByCourseId(courseId);
     }
 
     @Override
