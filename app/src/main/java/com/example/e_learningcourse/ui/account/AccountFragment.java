@@ -101,9 +101,19 @@ public class AccountFragment extends Fragment {
                         .error(R.drawable.profile_placeholder)
                         .into(binding.imgProfile);
                 mImageUrl = userDetail.getData().getAvatarUrl();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-                String formattedUpdate = sdf.format(userDetail.getData().getDateOfBirth());
-                binding.etDob.setText(formattedUpdate);
+                
+                // Handle date of birth formatting with null check
+                Date dateOfBirth = userDetail.getData().getDateOfBirth();
+                if (dateOfBirth != null) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+                    String formattedDate = sdf.format(dateOfBirth);
+                    binding.etDob.setText(formattedDate);
+                } else {
+                    // Set default date to current date if dateOfBirth is null
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+                    String currentDate = sdf.format(new Date());
+                    binding.etDob.setText(currentDate);
+                }
             }
         });
     }

@@ -89,13 +89,23 @@ public class SearchActivity extends AppCompatActivity implements SearchRecentFra
         }
     }
     @Override
-    public void onRecentKeywordClicked(String keyword) {
+    public void onRecentKeywordClicked(String keyword, boolean isCategory) {
         if (!isResultsFragmentShown) {
             isResultsFragmentShown = true;
             showFragment(resultsFragment);
-            binding.fragmentContainer.post(() -> resultsFragment.updateSearch(keyword));
+            binding.fragmentContainer.post(() -> {
+                if (isCategory) {
+                    resultsFragment.updateSearchCategory(keyword);
+                } else {
+                    resultsFragment.updateSearch(keyword);
+                }
+            });
         } else {
-            resultsFragment.updateSearch(keyword);
+            if (isCategory) {
+                resultsFragment.updateSearchCategory(keyword);
+            } else {
+                resultsFragment.updateSearch(keyword);
+            }
         }
         hideKeyboard();
     }

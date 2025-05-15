@@ -15,6 +15,7 @@ public class RecentCourseManager {
     private static final String PREF_NAME = "recent_courses_pref";
     private static final String KEY_COURSES = "recent_courses";
     private static final String KEY_SEARCHES = "recent_searches";
+    private static final String KEY_CATEGORIES = "category_names";
     private static final int MAX_COURSE_SIZE = 5;
     private static final int MAX_SEARCH_SIZE = 10;
 
@@ -108,5 +109,33 @@ public class RecentCourseManager {
             editor.putString(KEY_SEARCHES, new Gson().toJson(currentList));
             editor.apply();
         }
+    }
+
+    public static void saveCategoryName(Context context, String categoryName) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+
+        String json = prefs.getString(KEY_CATEGORIES, "[]");
+        Type type = new TypeToken<List<String>>() {}.getType();
+        List<String> categories = gson.fromJson(json, type);
+
+        if (categories == null) categories = new ArrayList<>();
+
+        // Add if not exists
+        if (!categories.contains(categoryName.trim())) {
+            categories.add(categoryName.trim());
+        }
+
+        prefs.edit().putString(KEY_CATEGORIES, gson.toJson(categories)).apply();
+    }
+
+    public static boolean isCategoryName(Context context, String keyword) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String json = prefs.getString(KEY_CATEGORIES, "[]");
+        Type type = new TypeToken<List<String>>() {}.getType();
+        List<String> categories = new Gson().fromJson(json, type);
+        
+        if (categories == null) return false;
+        return categories.contains(keyword.trim());
     }
 }

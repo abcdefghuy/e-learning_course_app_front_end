@@ -143,4 +143,9 @@ public class PopularCoursesActivity extends AppCompatActivity implements CourseA
         super.onDestroy();
         binding = null;
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initializeCourses(); // Load lại dữ liệu mỗi khi activity quay lại
+    }
 }
