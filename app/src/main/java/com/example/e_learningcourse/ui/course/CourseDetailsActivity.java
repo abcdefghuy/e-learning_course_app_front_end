@@ -18,6 +18,7 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.data.local.UserManager;
 import com.example.e_learningcourse.databinding.ActivityCourseDetailsBinding;
 import com.example.e_learningcourse.model.response.CourseDetailResponse;
+import com.example.e_learningcourse.ui.bookmark.BookmarkViewModel;
 import com.example.e_learningcourse.ui.lesson.CourseLessonFragment;
 import com.example.e_learningcourse.ui.lesson.MyLessonsFragment;
 import com.example.e_learningcourse.ui.payment.PaymentActivity;
@@ -25,6 +26,8 @@ import com.example.e_learningcourse.ui.review.ReviewsFragment;
 import com.example.e_learningcourse.utils.CurrencyUtils;
 import com.google.android.material.tabs.TabLayout;
 import com.example.e_learningcourse.utils.NotificationUtils;
+
+import java.util.Objects;
 
 public class CourseDetailsActivity extends AppCompatActivity {
     private ActivityCourseDetailsBinding binding;
@@ -35,6 +38,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
     private boolean isEnrolled;
     private CourseViewModel courseViewModel;
     private SharedCourseViewModel sharedViewModel;
+    private BookmarkViewModel bookmarkViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,31 +46,14 @@ public class CourseDetailsActivity extends AppCompatActivity {
         binding = ActivityCourseDetailsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Xử lý deep link
-        Intent intent = getIntent();
-        if (intent != null && intent.getData() != null) {
-            Uri uri = intent.getData();
-            if (uri != null && "elearning".equals(uri.getScheme()) && "course".equals(uri.getHost())) {
-                String path = uri.getPath();
-                if (path != null && path.startsWith("/")) {
-                    String courseIdStr = path.substring(1);
-                    try {
-                        courseId = Long.parseLong(courseIdStr);
-                    } catch (NumberFormatException e) {
-                        showError("Invalid course ID");
-                        finish();
-                        return;
-                    }
-                }
-            }
-        } else {
-            courseId = getIntent().getLongExtra("courseId", -1);
-        }
 
         long userId = UserManager.getInstance(this).getUserId();
         rating = getIntent().getDoubleExtra("rating", 0);
         mentorName = getIntent().getStringExtra("mentorName");
         mentorAvatar = getIntent().getStringExtra("mentorAvatar");
+        courseId = getIntent().getLongExtra("courseId", -1);
+        isBookmarked = getIntent().getBooleanExtra("isBookmarked", false);
+        Log.d("CourseDetailsActivity", "isBookmarked = " + isBookmarked);
         if (courseId == -1) {
             // Handle error: courseId not found
             finish();
@@ -75,6 +62,7 @@ public class CourseDetailsActivity extends AppCompatActivity {
         // Initialize ViewModel
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
         sharedViewModel = new ViewModelProvider(this).get(SharedCourseViewModel.class);
+        bookmarkViewModel = new ViewModelProvider(this).get(BookmarkViewModel.class);
         setupToolbar();
         setupTabs();
         setupClickListeners();
@@ -92,7 +80,6 @@ public class CourseDetailsActivity extends AppCompatActivity {
         courseViewModel.getCourseDetails().observe(this, courseDetailResponse -> {
             if (courseDetailResponse != null) {
                 isEnrolled = courseDetailResponse.isEnrolled();
-                Log.d("EnrollmentStatus", "isEnrolled = " + courseDetailResponse.isEnrolled());
                 binding.tvCourseTitle.setText(courseDetailResponse.getCourseName());
                 binding.tvInstructorName.setText(mentorName);
                 binding.tvRating.setText(String.valueOf(rating));
@@ -105,7 +92,6 @@ public class CourseDetailsActivity extends AppCompatActivity {
                 binding.tvRating.setText(String.valueOf(courseDetailResponse.getRating()));
                 binding.tvLessonsCount.setText(String.valueOf(courseDetailResponse.getLessonCount()) + " lessons");
                 binding.tvReviewCount.setText(String.valueOf(courseDetailResponse.getReviewCount()) + " reviews");
-                isBookmarked = courseDetailResponse.isBookmarked();
                 binding.btnBookmark.setImageResource(
                         isBookmarked ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark
                 );
@@ -128,14 +114,17 @@ public class CourseDetailsActivity extends AppCompatActivity {
 
     private void setupToolbar() {
         binding.btnBack.setOnClickListener(v -> finish());
-        binding.btnShare.setOnClickListener(v -> {
-            // Implement share functionality
-        });
         binding.btnBookmark.setOnClickListener(v -> {
             isBookmarked = !isBookmarked;
             binding.btnBookmark.setImageResource(
                     isBookmarked ? R.drawable.ic_bookmark_filled : R.drawable.ic_bookmark
             );
+            bookmarkViewModel.toggleBookmark(courseId, isBookmarked);
+            if (isBookmarked) {
+                showMessage("Added to bookmark");
+            } else {
+                showMessage("Removed from bookmark");
+            }
         });
     }
 
@@ -234,5 +223,8 @@ public class CourseDetailsActivity extends AppCompatActivity {
 
     private void showError(String message) {
         NotificationUtils.showError(this, binding.getRoot(), message);
+    }
+    private void showMessage(String message) {
+        NotificationUtils.showInfo(this, binding.getRoot(), message);
     }
 } 

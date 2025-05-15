@@ -123,18 +123,11 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             binding.tvInstructorName.setText(course.getMentorName());
             binding.tvRating.setText(String.format(Locale.getDefault(), "%.1f", course.getRating()));
 
-            Log.d("PopularCoursesAdapter", "Binding course: " + course.getCourseName());
-            Log.d("PopularCoursesAdapter", "Course price: " + course.getCoursePrice());
-            Log.d("PopularCoursesAdapter", "Is best seller: " + course.isBestSeller());
-
             binding.tvPrice.setText(CurrencyUtils.formatCurrencyVND(course.getCoursePrice()));
             binding.tvPrice.setVisibility(View.VISIBLE);
-//            Log.d("PopularCoursesAdapter", "Price text set to: " + priceText);
 
             boolean isBestSeller = course.isBestSeller();
             binding.tvBestSeller.setVisibility(isBestSeller ? View.VISIBLE : View.GONE);
-            Log.d("PopularCoursesAdapter", "Best seller visibility: " + (isBestSeller ? "VISIBLE" : "GONE"));
-            
             binding.ivBookmark.setSelected(course.isBookmarked());
             Glide.with(context)
                     .load(course.getCourseImg())
@@ -159,6 +152,7 @@ public class PopularCoursesAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 intent.putExtra("mentorName", course.getMentorName());
                 intent.putExtra("mentorAvatar", course.getMentorAvatar());
                 intent.putExtra("rating", course.getRating());
+                intent.putExtra("isBookmarked", course.isBookmarked());
                 v.getContext().startActivity(intent);
             });
         }
