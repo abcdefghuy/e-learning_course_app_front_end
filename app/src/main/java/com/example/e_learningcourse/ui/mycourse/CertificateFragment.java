@@ -84,7 +84,7 @@ public class CertificateFragment extends Fragment {
             requireActivity().onBackPressed();
             return;
         }
-        if (progress == 50) {
+        if (progress >= 50) {
             binding.btnReview.setVisibility(View.VISIBLE);
         } else {
             binding.btnReview.setVisibility(View.GONE);
