@@ -1,5 +1,6 @@
 package com.example.e_learningcourse.ui.lesson;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 public class MyLessonsFragment extends Fragment implements LessonsAdapter.OnLessonClickListener {
 
+    private static final int REQUEST_LESSON_PLAYER = 1001;
     private FragmentLessonsBinding binding;
     private LessonsAdapter adapter;
     private boolean isLoading = false;
@@ -98,6 +100,7 @@ public class MyLessonsFragment extends Fragment implements LessonsAdapter.OnLess
 
     private void loadLessons(Long courseId) {
         isLoading = true;
+        allLessons.clear(); // Clear existing lessons before loading new ones
         lessonViewModel.fetchLessonsByCourse(courseId);
     }
     private void loadMoreLessons(Long courseId) {
@@ -126,6 +129,23 @@ public class MyLessonsFragment extends Fragment implements LessonsAdapter.OnLess
         Intent intent = new Intent(requireContext(), LessonPlayerActivity.class);
         intent.putExtra("current_lesson", currentLesson);
         intent.putParcelableArrayListExtra("next_lessons", new ArrayList<>(nextLessons));
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_LESSON_PLAYER);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_LESSON_PLAYER && resultCode == Activity.RESULT_OK && data != null) {
+            boolean lessonCompleted = data.getBooleanExtra("lesson_completed", false);
+            String lessonId = data.getStringExtra("lesson_id");
+            
+            if (lessonCompleted && lessonId != null) {
+                // Refresh the lessons list
+                long courseId = getArguments() != null ? getArguments().getLong("courseId") : -1;
+                if (courseId != -1) {
+                    loadLessons(courseId);
+                }
+            }
+        }
     }
 } 
