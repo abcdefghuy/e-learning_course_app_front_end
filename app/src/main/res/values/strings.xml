@@ -4,4 +4,9 @@
     <string name="bookmark_added">Added to bookmarks</string>
     <string name="cancellation_policy">You may cancel your enrollment within %1$d days of purchase for a full refund. Refunds are not available if you have completed more than %2$d%% of the course content.</string>
     <string name="recent_courses_cleared">All recently viewed courses have been cleared</string>
+
+    <string name="terms_eu">These terms apply to users in the European Union, in accordance with GDPR regulations.</string>
+    <string name="terms_us">These terms apply to users in the United States, in accordance with CCPA regulations.</string>
+    <string name="terms_default">These are the general terms of service applicable to all users worldwide.</string>
+
 </resources>

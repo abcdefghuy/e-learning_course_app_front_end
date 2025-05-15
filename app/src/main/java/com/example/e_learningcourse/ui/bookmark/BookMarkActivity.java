@@ -68,16 +68,21 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
         // Observe LiveData only ONCE here
         bookmarkViewModel.getCourses().observe(this, response -> {
             if (response != null) {
-                if (isLoading) {
-                    // Hide shimmer loading
-                    adapter.showShimmer(false);
-                    if (adapter.getItemCount() == 0) {
-                        adapter.setCourses(response.getData().getContent()); // Initial load
-                    } else {
-                        adapter.addCourses(response.getData().getContent()); // Load more
+                if (response.getData().getContent() == null || response.getData().getContent().isEmpty()) {
+                    showNoData(); // hoặc hiển thị layout báo không có đánh giá
+                }
+                else {
+                    if (isLoading) {
+                        // Hide shimmer loading
+                        adapter.showShimmer(false);
+                        if (adapter.getItemCount() == 0) {
+                            adapter.setCourses(response.getData().getContent()); // Initial load
+                        } else {
+                            adapter.addCourses(response.getData().getContent()); // Load more
+                        }
+                        hasMoreData = !response.getData().isLast(); // Use isLast from response
+                        isLoading = false;
                     }
-                    hasMoreData = !response.getData().isLast(); // Use isLast from response
-                    isLoading = false;
                 }
             }
         });
@@ -106,6 +111,7 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
                 }
             }
         });
+        initializeBookmarkedCourses();
     }
 
     private void loadMoreBookmark() {
@@ -196,5 +202,11 @@ public class BookMarkActivity extends AppCompatActivity implements CourseAdapter
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
+    }
+    private void showNoData() {
+        RecyclerView rvReviews = findViewById(R.id.rvBookmarkedCourses);
+        View layoutNoData = findViewById(R.id.layoutNoData);
+        rvReviews.setVisibility(View.GONE);
+        layoutNoData.setVisibility(View.VISIBLE);
     }
 }

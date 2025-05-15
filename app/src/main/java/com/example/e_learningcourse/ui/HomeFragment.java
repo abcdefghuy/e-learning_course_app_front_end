@@ -3,12 +3,17 @@ package com.example.e_learningcourse.ui;
 import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.example.e_learningcourse.MainActivity;
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.CategoryAdapter;
 import com.example.e_learningcourse.adapter.ContinueLearningAdapter;
@@ -41,6 +47,7 @@ import com.example.e_learningcourse.ui.mentor.MentorViewModel;
 import com.example.e_learningcourse.ui.mycourse.ContinueCourseViewModel;
 import com.example.e_learningcourse.ui.mycourse.ContinueLearningActivity;
 import com.example.e_learningcourse.utils.NotificationUtils;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,12 +71,13 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
 
     private boolean isLoading = false;
     private boolean isLastPage = false;
+    private boolean hasShownProfileDialog = false;
 
     private final ActivityResultLauncher<Intent> popularCoursesLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    loadSampleData();
+                    loadPopularCourse();
                 }
             }
     );
@@ -78,7 +86,7 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == RESULT_OK) {
-                    loadSampleData();
+                    loadPopularCourse();
                 }
             }
     );
@@ -200,6 +208,10 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
         userViewModel.getUserInfo().observe(getViewLifecycleOwner(), response -> {
             if (response != null && response.isSuccess()) {
                 String userName = response.getData().getFullName();
+                if((userName == null || userName.isEmpty()) && !hasShownProfileDialog) {
+                    hasShownProfileDialog = true;
+                    showProfileCompletionDialog();
+                }
                 binding.tvWelcome.setText(userName);
                 Glide.with(requireContext())
                         .load(response.getData().getAvatarUrl())
@@ -210,6 +222,39 @@ public class HomeFragment extends Fragment implements PopularCoursesAdapter.OnCo
                 Log.e(TAG, "Failed to load user data: " + response.getMessage());
             }
         });
+    }
+
+    private void showProfileCompletionDialog() {
+        Dialog dialog = new Dialog(requireContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_profile_completion);
+        
+        // Set dialog width to 90% of screen width
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        // Find views
+        ImageView ivIcon = dialog.findViewById(R.id.ivIcon);
+        TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+        TextView tvMessage = dialog.findViewById(R.id.tvMessage);
+        MaterialButton btnComplete = dialog.findViewById(R.id.btnComplete);
+        MaterialButton btnLater = dialog.findViewById(R.id.btnLater);
+
+        // Set click listeners
+        btnComplete.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (getActivity() != null) {
+                ((MainActivity) getActivity()).navigateToAccount();
+            }
+        });
+
+        btnLater.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     @Override

@@ -81,18 +81,28 @@ public class SearchResultsFragment extends Fragment implements CourseAdapter.OnI
         });
     }
 
+    private void resetPage() {
+        courseViewModel.resetPagination();
+        hasMoreData = true;
+        isLoading = false;
+    }
+
     public void updateSearch(String query) {
         if (binding == null) return;
         currentQuery = query;
         binding.tvResultsTitle.setText(String.format("Results for \"%s\"", query));
         RecentCourseManager.saveSearchKeyword(requireContext(), query);
+        resetPage();
         performSearch(query);
     }
+
     public void updateSearchCategory(String query) {
         if (binding == null) return;
         currentQuery = query;
         binding.tvResultsTitle.setText(String.format("Results for \"%s\"", query));
         RecentCourseManager.saveSearchKeyword(requireContext(), query);
+        RecentCourseManager.saveCategoryName(requireContext(), query);
+        resetPage();
         performSearchByCategoryName(query);
     }
 
@@ -100,6 +110,7 @@ public class SearchResultsFragment extends Fragment implements CourseAdapter.OnI
         if (binding == null) return;
         int selectedTab = binding.tabLayout.getSelectedTabPosition();
         if (selectedTab == 0) {
+            resetPage();
             isLoading = true;
             courseViewModel.fetchCoursesByCategory(query);
         } else {
@@ -130,6 +141,7 @@ public class SearchResultsFragment extends Fragment implements CourseAdapter.OnI
         if (binding == null) return;
         int selectedTab = binding.tabLayout.getSelectedTabPosition();
         if (selectedTab == 0) {
+            resetPage();
             isLoading = true;
             courseViewModel.fetchSearchCourse(query);
         } else {
