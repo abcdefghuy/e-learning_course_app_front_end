@@ -15,6 +15,7 @@ import com.example.e_learningcourse.model.request.VerifyRequest;
 import com.example.e_learningcourse.model.response.ApiResponse;
 import com.example.e_learningcourse.model.response.LoginResponse;
 import com.example.e_learningcourse.utils.ApiUtils;
+import com.example.e_learningcourse.utils.JwtUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,13 +32,11 @@ public class AuthenticationRepository extends BaseRepository {
         MutableLiveData<ApiResponse<LoginResponse>> liveData = new MutableLiveData<>();
         enqueue(api.login(new LoginRequest(email, password)), liveData, LoginResponse.class);
         liveData.observeForever(response -> {
-            if (response != null && response.isSuccess() && response.getData() != null) {
-                String token = response.getData().getToken();
-                long expiresInSeconds = response.getData().getExpiresIn();
-                long expirationTimeMillis = System.currentTimeMillis() + expiresInSeconds * 1000;
+            if (response != null && response.isSuccess() && response.getData() != null) {String token = response.getData().getToken();
+                long expSeconds = JwtUtils.getExpirationTimeFromJWT(token);
 
                 TokenManager.getInstance(App.getContext()).saveToken(token);
-                TokenManager.getInstance(App.getContext()).saveExpiredToken(String.valueOf(expirationTimeMillis));
+                TokenManager.getInstance(App.getContext()).saveExpiredToken(String.valueOf(expSeconds));
             }
         });
         return liveData;
@@ -49,9 +48,9 @@ public class AuthenticationRepository extends BaseRepository {
         return liveData;
     }
 
-    public LiveData<ApiResponse<Void>> verify(String email, String code) {
+    public LiveData<ApiResponse<Void>> verify(String email, String code, String action) {
         MutableLiveData<ApiResponse<Void>> liveData = new MutableLiveData<>();
-        enqueue(api.verify(new VerifyRequest(email, code)), liveData, Void.class);
+        enqueue(api.verify(new VerifyRequest(email, code, action)), liveData, Void.class);
         return liveData;
     }
 
@@ -64,6 +63,12 @@ public class AuthenticationRepository extends BaseRepository {
     public LiveData<ApiResponse<Void>> resetPassword(String email, String password) {
         MutableLiveData<ApiResponse<Void>> liveData = new MutableLiveData<>();
         enqueue(api.resetPassword(new ResetPasswordRequest(email, password)), liveData, Void.class);
+        return liveData;
+    }
+
+    public LiveData<ApiResponse<Void>> resendVerificationCode(String email) {
+        MutableLiveData<ApiResponse<Void>> liveData = new MutableLiveData<>();
+        enqueue(api.resendVerificationCode(email), liveData, Void.class);
         return liveData;
     }
 }

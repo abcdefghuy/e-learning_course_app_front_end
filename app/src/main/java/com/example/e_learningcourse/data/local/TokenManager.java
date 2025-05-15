@@ -2,6 +2,7 @@ package com.example.e_learningcourse.data.local;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
@@ -52,11 +53,11 @@ public class TokenManager {
     public boolean isTokenExpired() {
         String expiredIn = sharedPreferences.getString(EXPIRED_IN, null);
         if (expiredIn != null) {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis() / 1000;
             long expirationTime = Long.parseLong(expiredIn);
             return currentTime > expirationTime;
         }
-        return true; // If no expiration time is set, consider the token expired
+        return true;
     }
 
     public String getToken() {
