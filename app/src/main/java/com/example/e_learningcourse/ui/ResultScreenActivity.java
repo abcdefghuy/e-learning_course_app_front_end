@@ -32,6 +32,12 @@ public class ResultScreenActivity extends Activity {
             try {
                 Class<?> clazz = Class.forName(targetActivity);
                 Intent intent = new Intent(ResultScreenActivity.this, clazz);
+
+                String targetTab = getIntent().getStringExtra("targetTab");
+                if (targetTab != null) {
+                    intent.putExtra("targetTab", targetTab);
+                }
+
                 startActivity(intent);
                 finish();
             } catch (ClassNotFoundException e) {

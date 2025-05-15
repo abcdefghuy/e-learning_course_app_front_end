@@ -44,8 +44,13 @@ public class MyCourseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupTabLayout();
         binding.btnBack.setOnClickListener(v -> requireActivity().finish());
-        // Show ContinueCourseFragment by default
         showFragment(new ContinueCourseFragment());
+        binding.tabLayout.post(() -> {
+            TabLayout.Tab firstTab = binding.tabLayout.getTabAt(0);
+            if (firstTab != null) {
+                firstTab.select();
+            }
+        });
     }
 
     private void setupTabLayout() {

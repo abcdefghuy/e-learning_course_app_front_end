@@ -11,6 +11,7 @@ import com.example.e_learningcourse.model.response.LoginResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 
 public interface AuthenticationAPI {
@@ -28,4 +29,7 @@ public interface AuthenticationAPI {
 
     @POST("auth/reset-password")
     Call<ApiResponse<Void>> resetPassword(@Body ResetPasswordRequest request);
+
+    @POST("auth/resend")
+    Call<ApiResponse<Void>> resendVerificationCode(@Query("email") String email);
 }

@@ -23,12 +23,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        replaceFragment(new HomeFragment());
         binding.bottomNavigationView.getMenu().findItem(R.id.fab).setEnabled(true);
         binding.fab.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
         });
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.home) {
@@ -43,7 +43,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        String targetTab = getIntent().getStringExtra("targetTab");
+        if ("courses".equals(targetTab)) {
+            binding.bottomNavigationView.setSelectedItemId(R.id.courses);
+        } else {
+            binding.bottomNavigationView.setSelectedItemId(R.id.home);
+        }
     }
+
 
     private void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()

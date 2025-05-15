@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.lifecycle.ViewModelProvider;
@@ -175,7 +176,7 @@ public class ProfileFragment extends Fragment {
         }
 
         MaterialButton btnCancel = logoutDialog.findViewById(R.id.btnCancel);
-        MaterialButton btnLogout = logoutDialog.findViewById(R.id.btnLogout);
+        AppCompatButton btnLogout = logoutDialog.findViewById(R.id.btnLogout);
 
         btnCancel.setOnClickListener(v -> {
             animateClick(v);
@@ -216,7 +217,7 @@ public class ProfileFragment extends Fragment {
 
     private void performLogout() {
         // Show loading state
-        MaterialButton btnLogout = logoutDialog.findViewById(R.id.btnLogout);
+        AppCompatButton btnLogout = logoutDialog.findViewById(R.id.btnLogout);
         btnLogout.setEnabled(false);
         btnLogout.setText("Logging out...");
 
