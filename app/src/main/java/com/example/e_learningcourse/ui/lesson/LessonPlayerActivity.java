@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -25,6 +26,7 @@ import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.adapter.LessonsAdapter;
 import com.example.e_learningcourse.databinding.ActivityLessonPlayerBinding;
 import com.example.e_learningcourse.model.response.LessonResponse;
+import com.example.e_learningcourse.ui.course.AboutCourseFragment;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener;
@@ -146,8 +148,8 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
         // Set current lesson details
         binding.tvLessonTitle.setText(currentLesson.getLessonName());
-        binding.tvLessonDuration.setText(String.valueOf(currentLesson.getDuration()));
-
+        binding.tvLessonDuration.setText(AboutCourseFragment.formatDuration(currentLesson.getDuration()));
+        binding.tvLessonDescription.setText(currentLesson.getLessonDescription());
         // Set up next lessons list
         if (nextLessons != null && !nextLessons.isEmpty()) {
             binding.rvLessons.setVisibility(View.VISIBLE);
@@ -167,7 +169,8 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
     private void updateLessonUI() {
         binding.tvLessonTitle.setText(currentLesson.getLessonName());
-        binding.tvLessonDuration.setText(String.valueOf(currentLesson.getDuration()));
+        binding.tvLessonDuration.setText(AboutCourseFragment.formatDuration(currentLesson.getDuration()));
+        binding.tvLessonDescription.setText(currentLesson.getLessonDescription());
     }
 
     private void initializeYouTubePlayer() {
