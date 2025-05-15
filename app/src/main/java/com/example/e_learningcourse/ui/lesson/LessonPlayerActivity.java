@@ -226,6 +226,11 @@ public class LessonPlayerActivity extends AppCompatActivity {
         lessonViewModel.lessonUpdateResult.observe(LessonPlayerActivity.this, success -> {
             if (success != null && success) {
                 showMessage("Bài học đã được đánh dấu hoàn thành!");
+                // Set result to notify parent activity/fragment
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("lesson_completed", true);
+                resultIntent.putExtra("lesson_id", currentLesson.getLessonId());
+                setResult(RESULT_OK, resultIntent);
                 refreshLessonList();
             }
         });
@@ -293,5 +298,13 @@ public class LessonPlayerActivity extends AppCompatActivity {
 
         dialog.setCancelable(false);
         dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (youTubePlayerView != null) {
+            youTubePlayerView.release();
+        }
     }
 }
