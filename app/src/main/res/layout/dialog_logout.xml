@@ -46,13 +46,16 @@
             android:layout_marginTop="24dp"
             android:orientation="vertical">
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:text="Yes, Logout"
                 android:textAllCaps="false"
                 android:textSize="16sp"
+                android:background="@drawable/rounded_button"
+                android:textColor="@color/white"
+                android:textStyle="bold"
                 app:cornerRadius="12dp" />
 
             <com.google.android.material.button.MaterialButton

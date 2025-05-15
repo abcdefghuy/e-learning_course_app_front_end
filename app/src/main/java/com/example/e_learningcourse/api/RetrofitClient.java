@@ -31,13 +31,24 @@ public class RetrofitClient {
                     .setLevel(HttpLoggingInterceptor.Level.BODY);
 
             Interceptor tokenInterceptor = chain -> {
+                Request originalRequest = chain.request();
+
+                // Kiểm tra token còn hạn không
                 String token = TokenManager.getInstance(App.getContext()).getToken();
-                Request.Builder requestBuilder = chain.request().newBuilder();
-                if (token != null) {
-                    requestBuilder.addHeader("Authorization", "Bearer " + token);
+                boolean isExpired = TokenManager.getInstance(App.getContext()).isTokenExpired();
+
+                // Nếu có token và chưa hết hạn → gắn Authorization
+                if (token != null && !isExpired) {
+                    Request requestWithToken = originalRequest.newBuilder()
+                            .addHeader("Authorization", "Bearer " + token)
+                            .build();
+                    return chain.proceed(requestWithToken);
                 }
-                return chain.proceed(requestBuilder.build());
+
+                // Nếu token đã hết hạn → không gắn token (coi như client công khai)
+                return chain.proceed(originalRequest);
             };
+
 
             authenticatedClient = new OkHttpClient.Builder()
                     .addInterceptor(logging)

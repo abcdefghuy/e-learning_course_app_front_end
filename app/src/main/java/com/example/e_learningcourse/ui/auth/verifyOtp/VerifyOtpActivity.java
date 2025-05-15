@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -36,7 +37,6 @@ public class VerifyOtpActivity extends BaseActivity<ActivityVerifyOtpBinding, Ve
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding.setViewModel(viewModel);
 
         String email = getIntent().getStringExtra("email");
@@ -47,22 +47,63 @@ public class VerifyOtpActivity extends BaseActivity<ActivityVerifyOtpBinding, Ve
             binding.emailInfo.setText("OTP code has been sent to " + hideEmail(email));
         }
 
-        binding.btnVerify.setOnClickListener(v -> viewModel.verify());
+        if (action != null) {
+            viewModel.setAction(action);
+        }
 
+        // Bắt đầu đếm ngược OTP
+        viewModel.startCountdown();
+
+        // Cài đặt các ô nhập OTP
         otpFields = Arrays.asList(
                 binding.otp1, binding.otp2, binding.otp3,
                 binding.otp4, binding.otp5, binding.otp6
         );
-
         setupOtpInputs();
 
+        // Xác minh OTP khi đủ 6 số
         viewModel.isOtpComplete.observe(this, isComplete ->
                 binding.btnVerify.setEnabled(Boolean.TRUE.equals(isComplete))
         );
 
+        binding.btnVerify.setOnClickListener(v -> viewModel.verify());
+
         viewModel.getVerifyResponse().observe(this, response -> {
             if (response != null && response.isSuccess()) {
                 goToNextScreen(action);
+            }
+        });
+
+        // Hiển thị thời gian đếm ngược
+        viewModel.getRemainingTime().observe(this, time -> {
+            int minutes = time / 60;
+            int seconds = time % 60;
+            String formattedTime = String.format("%02d:%02d", minutes, seconds);
+            binding.tvTimer.setText(formattedTime);
+        });
+
+        // Hiển thị nút resend hoặc dòng thời gian
+        viewModel.getIsResendVisible().observe(this, visible -> {
+            if (Boolean.TRUE.equals(visible)) {
+                binding.btnResend.setVisibility(View.VISIBLE);
+                binding.resendContainer.setVisibility(View.GONE);
+            } else {
+                binding.btnResend.setVisibility(View.GONE);
+                binding.resendContainer.setVisibility(View.VISIBLE);
+            }
+        });
+
+        // Khi người dùng bấm resend
+        binding.btnResend.setOnClickListener(v -> {
+            viewModel.resendOtp();
+        });
+
+        // Quan sát kết quả resend OTP
+        viewModel.getResendResponse().observe(this, response -> {
+            if (response != null && response.isSuccess()) {
+                Toast.makeText(this, "OTP has been resent successfully.", Toast.LENGTH_SHORT).show();
+            } else if (response != null) {
+                Toast.makeText(this, "Failed to resend OTP: " + response.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
