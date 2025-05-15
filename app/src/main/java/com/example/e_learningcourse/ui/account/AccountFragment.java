@@ -240,9 +240,16 @@ public class AccountFragment extends Fragment {
         }
 
         String phone = binding.etPhone.getText().toString().trim();
+        String vietnamPhonePattern = "^(0)(3[2-9]|5[6|8|9]|7[0|6-9]|8[1-5]|9[0-9])[0-9]{7}$";
+
         if (phone.isEmpty()) {
             binding.etPhone.setError("Phone number is required");
             isValid = false;
+        } else if (!phone.matches(vietnamPhonePattern)) {
+            binding.etPhone.setError("Invalid Vietnamese phone number");
+            isValid = false;
+        } else {
+            binding.etPhone.setError(null); // Clear error if valid
         }
         return isValid;
     }

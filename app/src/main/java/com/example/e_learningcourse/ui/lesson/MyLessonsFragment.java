@@ -62,10 +62,8 @@ public class MyLessonsFragment extends Fragment implements LessonsAdapter.OnLess
                 if (isLoading) {
                     if (adapter.getItemCount() == 0) {
                         adapter.setLesson(response.getContent()); // Initial load
-                        Log.d("PopularCoursesActivity", "Initial load: " + response.getContent().size());
                     } else {
                         adapter.addLessons(response.getContent()); // Load more
-                        Log.d("PopularCoursesActivity", "Load more: " + response.getContent().size());
                     }
                     allLessons.addAll(response.getContent());
                     hasMoreData = !response.isLast();
@@ -104,7 +102,6 @@ public class MyLessonsFragment extends Fragment implements LessonsAdapter.OnLess
     }
     private void loadMoreLessons(Long courseId) {
         if (!hasMoreData) return;
-
         isLoading = true;
         lessonViewModel.fetchLessonsByCourse(courseId);
     }
