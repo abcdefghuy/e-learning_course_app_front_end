@@ -78,8 +78,6 @@ public class ContinueLearningActivity extends AppCompatActivity {
                 }
             }
 
-            private void loadMoreCourses() {
-            }
         });
         loadCourses();
     }

@@ -4,10 +4,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.e_learningcourse.R;
 import com.example.e_learningcourse.databinding.ActivityHelpCenterBinding;
@@ -19,6 +22,8 @@ public class HelpCenterActivity extends AppCompatActivity {
     private ActivityHelpCenterBinding binding;
     private List<FaqItem> faqItems;
     private String currentCategory = "All";
+    private Animation fadeIn;
+    private Animation slideUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +31,17 @@ public class HelpCenterActivity extends AppCompatActivity {
         binding = ActivityHelpCenterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Initialize animations
+        fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+
         setupFaqItems();
         setupSearch();
         setupCategoryChips();
         setupBackButton();
+        
+        // Start with fade in animation
+        binding.faqContainer.startAnimation(fadeIn);
     }
 
     private void setupFaqItems() {
@@ -78,6 +90,9 @@ public class HelpCenterActivity extends AppCompatActivity {
                 question.setText(item.getQuestion());
                 answer.setText(item.getAnswer());
                 
+                // Add animation to each FAQ item
+                faqView.startAnimation(slideUp);
+                
                 new FaqItemAnimator(faqView, arrow, answer);
                 binding.faqContainer.addView(faqView);
             }
@@ -116,6 +131,9 @@ public class HelpCenterActivity extends AppCompatActivity {
                 question.setText(item.getQuestion());
                 answer.setText(item.getAnswer());
                 
+                // Add animation to filtered items
+                faqView.startAnimation(slideUp);
+                
                 new FaqItemAnimator(faqView, arrow, answer);
                 binding.faqContainer.addView(faqView);
             }
@@ -152,18 +170,33 @@ public class HelpCenterActivity extends AppCompatActivity {
     }
 
     private void updateChipSelection(Chip selectedChip) {
+        // Reset all chips
         binding.chipAll.setChipBackgroundColorResource(R.color.white);
         binding.chipServices.setChipBackgroundColorResource(R.color.white);
         binding.chipGeneral.setChipBackgroundColorResource(R.color.white);
         binding.chipAccount.setChipBackgroundColorResource(R.color.white);
 
-        binding.chipAll.setTextColor(getResources().getColor(R.color.gray_600));
-        binding.chipServices.setTextColor(getResources().getColor(R.color.gray_600));
-        binding.chipGeneral.setTextColor(getResources().getColor(R.color.gray_600));
-        binding.chipAccount.setTextColor(getResources().getColor(R.color.gray_600));
+        binding.chipAll.setTextColor(ContextCompat.getColor(this, R.color.gray_600));
+        binding.chipServices.setTextColor(ContextCompat.getColor(this, R.color.gray_600));
+        binding.chipGeneral.setTextColor(ContextCompat.getColor(this, R.color.gray_600));
+        binding.chipAccount.setTextColor(ContextCompat.getColor(this, R.color.gray_600));
+
+        // Animate selected chip
+        selectedChip.animate()
+            .scaleX(1.05f)
+            .scaleY(1.05f)
+            .setDuration(150)
+            .withEndAction(() -> {
+                selectedChip.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(150)
+                    .start();
+            })
+            .start();
 
         selectedChip.setChipBackgroundColorResource(R.color.blue_500);
-        selectedChip.setTextColor(getResources().getColor(R.color.blue));
+        selectedChip.setTextColor(ContextCompat.getColor(this, R.color.blue));
     }
 
     private void setupBackButton() {

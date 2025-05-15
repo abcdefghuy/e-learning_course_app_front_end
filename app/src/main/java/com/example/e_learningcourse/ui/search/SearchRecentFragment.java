@@ -37,7 +37,7 @@ public class SearchRecentFragment extends Fragment implements RecentSearchAdapte
     private List<CourseResponse> recentCourses;
     private BookmarkViewModel bookmarkViewModel;
     public interface OnRecentSearchInteractionListener {
-        void onRecentKeywordClicked(String keyword);
+        void onRecentKeywordClicked(String keyword, boolean isCategory);
     }
     private OnRecentSearchInteractionListener interactionListener;
 
@@ -187,7 +187,9 @@ public class SearchRecentFragment extends Fragment implements RecentSearchAdapte
     @Override
     public void onItemClick(String keyword) {
         if (!keyword.isEmpty() && interactionListener != null) {
-            interactionListener.onRecentKeywordClicked(keyword);
+            // Kiểm tra xem keyword có phải là tên danh mục không
+            boolean isCategory = RecentCourseManager.isCategoryName(requireContext(), keyword);
+            interactionListener.onRecentKeywordClicked(keyword, isCategory);
         }
     }
 }

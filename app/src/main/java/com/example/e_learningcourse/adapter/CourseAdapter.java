@@ -2,6 +2,7 @@ package com.example.e_learningcourse.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,8 +160,11 @@ public class CourseAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 // Chuyển đến CourseDetailsActivity khi người dùng nhấp vào mục
                 Intent intent = new Intent(v.getContext(), CourseDetailsActivity.class);
                 intent.putExtra("courseId", course.getCourseId());
+                intent.putExtra("mentorName", course.getMentorName());
+                intent.putExtra("mentorAvatar", course.getMentorAvatar());
+                intent.putExtra("rating", course.getRating());
+                intent.putExtra("isBookmarked", course.isBookmarked());
                 v.getContext().startActivity(intent);
-
                 // Nếu bạn cũng muốn thực hiện hành động lưu mục, bạn có thể gọi ở đây
                 if (itemSaveClickListener != null) {
                     itemSaveClickListener.onItemSaveClick(course);

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import com.example.e_learningcourse.databinding.ActivityMainBinding;
 import com.example.e_learningcourse.ui.HomeFragment;
 import com.example.e_learningcourse.ui.MessageFragment;
+import com.example.e_learningcourse.ui.account.AccountFragment;
 import com.example.e_learningcourse.ui.account.ProfileFragment;
 import com.example.e_learningcourse.ui.mycourse.MyCourseFragment;
 import com.example.e_learningcourse.ui.search.SearchActivity;
@@ -55,5 +56,10 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();
+    }
+
+    public void navigateToAccount() {
+        replaceFragment(new ProfileFragment());
+        binding.bottomNavigationView.setSelectedItemId(R.id.account);
     }
 }
