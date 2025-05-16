@@ -24,7 +24,7 @@
 
 - 🔍 **Tìm kiếm & lọc**
   - Tìm kiếm khóa học theo tên
-  - Lọc theo danh mục hoặc mức giá
+  - Tình kiếm theo tên tutor
 
 - 💳 **Thanh toán**
   - Tích hợp thanh toán VNPay
